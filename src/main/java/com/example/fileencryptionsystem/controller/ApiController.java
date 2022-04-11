@@ -1,5 +1,6 @@
 package com.example.fileencryptionsystem.controller;
 
+import com.example.fileencryptionsystem.model.DecryptionRequest;
 import com.example.fileencryptionsystem.model.EncryptionRequest;
 import com.example.fileencryptionsystem.service.EncryptionService;
 import java.util.List;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ApiController {
 
-  private EncryptionService encryptionService;
+  private final EncryptionService encryptionService;
 
   public ApiController(EncryptionService encryptionService) {
     this.encryptionService = encryptionService;
@@ -29,7 +30,20 @@ public class ApiController {
   ResponseEntity<String> encrypt(@RequestBody List<EncryptionRequest> encryptionRequests) {
     try {
       encryptionService.encryptFiles(encryptionRequests);
-      return ResponseEntity.ok("Encryption Completed. Files can be found at ");
+      return ResponseEntity.ok("Encryption Completed.");
+    } catch (IllegalStateException e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+  }
+
+  @PostMapping(path = "/decrypt",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.TEXT_PLAIN_VALUE)
+  @ResponseBody
+  ResponseEntity<String> decrypt(@RequestBody List<DecryptionRequest> decryptionRequests) {
+    try {
+      encryptionService.decryptFiles(decryptionRequests);
+      return ResponseEntity.ok("Decryption Completed.");
     } catch (IllegalStateException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
