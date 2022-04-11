@@ -3,7 +3,7 @@ package com.example.fileencryptionsystem.model;
 import lombok.Data;
 
 @Data
-public class EncryptionRequest {
+public class DecryptionRequest {
 
   String inputFilePath;
   String key;
