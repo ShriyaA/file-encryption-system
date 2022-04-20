@@ -43,6 +43,32 @@ public class StreamingEncryptionServiceTest {
   }
 
   @Test
+  public void testDecryptionEncryptionVideo_MP4() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("video-testing-100mb.mp4");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+
+	Exception exception = assertThrows(IOException.class, () ->
+			strongerStreamingEncryptionService.decryptFile(inputFile, key));
+	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
+
+    String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(decryptedFile)));
+
+	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+  }
+
+  @Test
   public void testEncryptionDecryptionVideo_AVI() throws GeneralSecurityException, IOException {
     String key = "testing-key";
 
@@ -63,6 +89,32 @@ public class StreamingEncryptionServiceTest {
     assert(Files.exists(Paths.get(decryptedFile)));
 
     assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(decryptedFile)) == -1L);
+  }
+
+  @Test
+  public void testDecryptionEncryptionVideo_AVI() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("video-testing.avi");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+
+	Exception exception = assertThrows(IOException.class, () ->
+			strongerStreamingEncryptionService.decryptFile(inputFile, key));
+	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
+
+    String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(decryptedFile)));
+
+	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
   }
 
   @Test
@@ -89,6 +141,32 @@ public class StreamingEncryptionServiceTest {
   }
 
   @Test
+  public void testDecryptionEncryptionVideo_MP3() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("audio_testing.mp3");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+
+	Exception exception = assertThrows(IOException.class, () ->
+			strongerStreamingEncryptionService.decryptFile(inputFile, key));
+	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
+
+    String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(decryptedFile)));
+
+	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+  }
+
+  @Test
   public void testEncryptionDecryptionAudio_WAV() throws GeneralSecurityException, IOException {
     String key = "testing-key";
 
@@ -109,6 +187,32 @@ public class StreamingEncryptionServiceTest {
     assert(Files.exists(Paths.get(decryptedFile)));
 
     assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(decryptedFile)) == -1L);
+  }
+
+  @Test
+  public void testDecryptionEncryptionVideo_WAV() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("audio_testing.wav");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+
+	Exception exception = assertThrows(IOException.class, () ->
+			strongerStreamingEncryptionService.decryptFile(inputFile, key));
+	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
+
+    String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(decryptedFile)));
+
+	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
   }
 
   @Test
