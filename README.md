@@ -1,3 +1,4 @@
+
 The code will work for text file and images. Need changes to support video
 
 Developer Notes:
@@ -34,7 +35,7 @@ payload-encryption.json example:
     "inputFilePath": "/Users/pranavkapoor/Desktop/abc.txt",
     "key": "Pranav encryption key",
     "fileType": "TEXT",
-    "encryptionLevel": "STRONG"
+    "encryptionLevel": "STRONGER"
   }
 ]
 ```
@@ -59,7 +60,7 @@ payload-decryption.json example:
     "inputFilePath": "/Users/pranavkapoor/Desktop/abc-encrypted.txt",
     "key": "Pranav encryption key",
     "fileType": "TEXT",
-    "encryptionLevel": "STRONG"
+    "encryptionLevel": "STRONGER"
   }
 ]
 ```
