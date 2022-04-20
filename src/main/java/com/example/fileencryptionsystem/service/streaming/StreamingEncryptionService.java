@@ -9,13 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 
 @Slf4j
 public abstract class StreamingEncryptionService extends IEncryptionService {
@@ -29,26 +25,11 @@ public abstract class StreamingEncryptionService extends IEncryptionService {
   }
 
   @Override
-  public void encryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    Path path = Paths.get(inputFilePath);
-    if (Files.notExists(path)) {
-      log.error("No file exists at " + inputFilePath + ". Nothing to encrypt");
-      return;
-    }
-
-    if (!Files.isReadable(path)) {
-      log.error("File at " + inputFilePath + " is not readable");
-      return;
-    }
-
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-encrypted." + FilenameUtils.getExtension(inputFilePath);
-    File outputFile = new File(outputFilePath);
-    outputFile.createNewFile();
-
+  protected void performEncryption(Path inputFilePath, File outputFile, byte[] keyBytes)
+      throws IOException, GeneralSecurityException {
     try (OutputStream ciphertextStream =
-        getStreamingAead().newEncryptingStream(new FileOutputStream(outputFile), key.getBytes(
-            StandardCharsets.UTF_8));
-        InputStream plaintextStream = new FileInputStream(inputFilePath)) {
+        getStreamingAead().newEncryptingStream(new FileOutputStream(outputFile), keyBytes);
+        InputStream plaintextStream = new FileInputStream(inputFilePath.toString())) {
       byte[] chunk = new byte[1024];
       int chunkLen;
       while ((chunkLen = plaintextStream.read(chunk)) != -1) {
@@ -58,25 +39,11 @@ public abstract class StreamingEncryptionService extends IEncryptionService {
   }
 
   @Override
-  public void decryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    Path path = Paths.get(inputFilePath);
-
-    if (Files.notExists(Paths.get(inputFilePath))) {
-      log.error("No file exists at " + inputFilePath + ". Nothing to decrypt");
-      return;
-    }
-
-    if (!Files.isReadable(path)) {
-      log.error("File at " + inputFilePath + " is not readable");
-      return;
-    }
-
+  protected void performDecryption(Path inputFilePath, File outputFile, byte[] keyBytes)
+      throws IOException, GeneralSecurityException {
     InputStream ciphertextStream =
-        getStreamingAead().newDecryptingStream(new FileInputStream(inputFilePath),  key.getBytes(StandardCharsets.UTF_8));
+        getStreamingAead().newDecryptingStream(new FileInputStream(inputFilePath.toString()),  keyBytes);
 
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-encrypted." + FilenameUtils.getExtension(inputFilePath);
-    File outputFile = new File(outputFilePath);
-    outputFile.createNewFile();
     OutputStream plaintextStream = new FileOutputStream(outputFile);
     byte[] chunk = new byte[1024];
     int chunkLen;

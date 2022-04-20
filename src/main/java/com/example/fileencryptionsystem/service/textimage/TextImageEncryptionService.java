@@ -26,51 +26,24 @@ public abstract class TextImageEncryptionService extends IEncryptionService {
   }
 
   @Override
-  public void encryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    Path path = Paths.get(inputFilePath);
-    if (Files.notExists(path)) {
-      log.error("No file exists at " + inputFilePath + ". Nothing to encrypt");
-      return;
-    }
-
-    if (!Files.isReadable(path)) {
-      log.error("File at " + inputFilePath + " is not readable");
-      return;
-    }
-
-    byte[] plaintext = Files.readAllBytes(path);
-    byte[] cipherText = getAead().encrypt(plaintext, key.getBytes(StandardCharsets.UTF_8));
-
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-encrypted." + FilenameUtils.getExtension(inputFilePath);
-    File outputFile = new File(outputFilePath);
-    outputFile.createNewFile();
+  protected void performEncryption(Path inputFilePath, File outputFile, byte[] keyBytes)
+      throws IOException, GeneralSecurityException {
+    byte[] plaintext = Files.readAllBytes(inputFilePath);
+    byte[] cipherText = getAead().encrypt(plaintext, keyBytes);
     FileOutputStream stream = new FileOutputStream(outputFile, false);
     stream.write(cipherText);
   }
 
   @Override
-  public void decryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    Path path = Paths.get(inputFilePath);
-
-    if (Files.notExists(Paths.get(inputFilePath))) {
-      log.error("No file exists at " + inputFilePath + ". Nothing to decrypt");
-      return;
-    }
-
-    if (!Files.isReadable(path)) {
-      log.error("File at " + inputFilePath + " is not readable");
-      return;
-    }
-
-    byte[] cipherText = Files.readAllBytes(path);
-    byte[] plainText = getAead().decrypt(cipherText, key.getBytes(StandardCharsets.UTF_8));
-
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-decrypted." + FilenameUtils.getExtension(inputFilePath);
-    File outputFile = new File(outputFilePath);
-    outputFile.createNewFile();
-    FileOutputStream stream = new FileOutputStream(outputFilePath, false);
+  protected void performDecryption(Path inputFilePath, File outputFile, byte[] keyBytes)
+      throws IOException, GeneralSecurityException {
+    byte[] cipherText = Files.readAllBytes(inputFilePath);
+    byte[] plainText = getAead().decrypt(cipherText, keyBytes);
+    FileOutputStream stream = new FileOutputStream(outputFile, false);
     stream.write(plainText);
   }
+
+
 
   protected abstract Aead getAead();
 
