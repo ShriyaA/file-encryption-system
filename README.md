@@ -17,10 +17,10 @@ The server will start at localhost:8080
 Encryption Request Example:
 
 ```console
-curl -d "@payload.json" -H "Content-Type: application/json" -X POST localhost:8080/encrypt
+curl -d "@payload-encryption.json" -H "Content-Type: application/json" -X POST localhost:8080/encrypt
 ```
 
-payload.json example:
+payload-encryption.json example:
 
 ```json
 [
@@ -38,10 +38,10 @@ payload.json example:
 Decryption Request Example:
 
 ```console
-curl -d "@payload.json" -H "Content-Type: application/json" -X POST localhost:8080/decrypt
+curl -d "@payload-decryption.json" -H "Content-Type: application/json" -X POST localhost:8080/decrypt
 ```
 
-payload.json example:
+payload-decryption.json example:
 
 ```json
 [
