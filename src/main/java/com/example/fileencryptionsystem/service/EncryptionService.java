@@ -1,8 +1,13 @@
 package com.example.fileencryptionsystem.service;
 
 import com.example.fileencryptionsystem.model.DecryptionRequest;
+import com.example.fileencryptionsystem.model.EncryptionLevel;
 import com.example.fileencryptionsystem.model.EncryptionRequest;
 import com.example.fileencryptionsystem.model.FileType;
+import com.example.fileencryptionsystem.service.streaming.StrongStreamingEncryptionService;
+import com.example.fileencryptionsystem.service.streaming.StrongerStreamingEncryptionService;
+import com.example.fileencryptionsystem.service.textimage.StrongTextImageEncryptionService;
+import com.example.fileencryptionsystem.service.textimage.StrongerTextImageEncryptionService;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
@@ -14,48 +19,71 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EncryptionService {
 
-  private final TextImageEncryptionService textImageEncryptionService;
-  private final StreamingEncryptionService streamingEncryptionService;
+  private final StrongTextImageEncryptionService strongTextImageEncryptionService;
+  private final StrongerTextImageEncryptionService strongerTextImageEncryptionService;
+  private final StrongStreamingEncryptionService strongStreamingEncryptionService;
+  private final StrongerStreamingEncryptionService strongerStreamingEncryptionService;
 
-  public EncryptionService(TextImageEncryptionService textImageEncryptionService, StreamingEncryptionService streamingEncryptionService) {
-    this.textImageEncryptionService = textImageEncryptionService;
-    this.streamingEncryptionService = streamingEncryptionService;
+  public EncryptionService(StrongTextImageEncryptionService strongTextImageEncryptionService,
+      StrongerTextImageEncryptionService strongerTextImageEncryptionService,
+      StrongStreamingEncryptionService strongStreamingEncryptionService,
+      StrongerStreamingEncryptionService strongerStreamingEncryptionService) {
+    this.strongTextImageEncryptionService = strongTextImageEncryptionService;
+    this.strongerTextImageEncryptionService = strongerTextImageEncryptionService;
+    this.strongStreamingEncryptionService = strongStreamingEncryptionService;
+    this.strongerStreamingEncryptionService = strongerStreamingEncryptionService;
   }
 
   public void encryptFiles(List<EncryptionRequest> encryptionRequests) {
     encryptionRequests.forEach(er -> {
       try {
-        encryptFile(er.getInputFilePath(), er.getKey(), er.getFileType());
+        encryptFile(er.getInputFilePath(), er.getKey(), er.getFileType(), er.getEncryptionLevel());
       } catch (GeneralSecurityException | IOException e) {
         e.printStackTrace();
       }
     });
   }
 
-  private void encryptFile(String inputFilePath, String key, FileType fileType) throws GeneralSecurityException, IOException {
+  private void encryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
 
     if (FileType.TEXT == fileType || FileType.IMAGE == fileType) {
-      textImageEncryptionService.encryptFile(inputFilePath, key);
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongTextImageEncryptionService.encryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerTextImageEncryptionService.encryptFile(inputFilePath, key);
+      }
     } else if (FileType.AUDIO == fileType || FileType.VIDEO == fileType) {
-      streamingEncryptionService.encryptFile(inputFilePath, key);
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongStreamingEncryptionService.encryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerStreamingEncryptionService.encryptFile(inputFilePath, key);
+      }
     }
   }
 
   public void decryptFiles(List<DecryptionRequest> decryptionRequests) {
     decryptionRequests.forEach(dr -> {
       try {
-        decryptFile(dr.getInputFilePath(), dr.getKey(), dr.getFileType());
+        decryptFile(dr.getInputFilePath(), dr.getKey(), dr.getFileType(), dr.getEncryptionLevel());
       } catch (GeneralSecurityException | IOException e) {
         e.printStackTrace();
       }
     });
   }
 
-  private void decryptFile(String inputFilePath, String key, FileType fileType) throws GeneralSecurityException, IOException {
+  private void decryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
     if (FileType.TEXT == fileType || FileType.IMAGE == fileType) {
-      textImageEncryptionService.decryptFile(inputFilePath, key);
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongTextImageEncryptionService.decryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerTextImageEncryptionService.decryptFile(inputFilePath, key);
+      }
     } else if (FileType.AUDIO == fileType || FileType.VIDEO == fileType) {
-      streamingEncryptionService.decryptFile(inputFilePath, key);
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongStreamingEncryptionService.decryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerStreamingEncryptionService.decryptFile(inputFilePath, key);
+      }
     }
   }
 }

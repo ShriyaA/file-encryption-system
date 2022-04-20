@@ -1,13 +1,7 @@
-package com.example.fileencryptionsystem.service;
+package com.example.fileencryptionsystem.service.textimage;
 
-import com.example.fileencryptionsystem.model.DecryptionRequest;
-import com.example.fileencryptionsystem.model.EncryptionRequest;
+import com.example.fileencryptionsystem.service.IEncryptionService;
 import com.google.crypto.tink.Aead;
-import com.google.crypto.tink.CleartextKeysetHandle;
-import com.google.crypto.tink.JsonKeysetReader;
-import com.google.crypto.tink.JsonKeysetWriter;
-import com.google.crypto.tink.KeyTemplates;
-import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,30 +13,19 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class TextImageEncryptionService {
+public abstract class TextImageEncryptionService extends IEncryptionService {
 
-  private final Aead aead;
-
-  public TextImageEncryptionService() throws GeneralSecurityException, IOException {
-    AeadConfig.register();
-
-    String keySetPath = "AEAD_keyset.json";
-    KeysetHandle handle;
-    if(Files.exists(Paths.get(keySetPath))) {
-      File keyFile = new File(keySetPath);
-      handle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(keyFile));
-    } else {
-      handle = KeysetHandle.generateNew(KeyTemplates.get("AES256_GCM"));
-      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(new File(keySetPath)));
+  static {
+    try {
+      AeadConfig.register();
+    } catch (GeneralSecurityException e) {
+      e.printStackTrace();
     }
-
-    aead = handle.getPrimitive(Aead.class);
   }
 
+  @Override
   public void encryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
     Path path = Paths.get(inputFilePath);
     if (Files.notExists(path)) {
@@ -56,8 +39,7 @@ public class TextImageEncryptionService {
     }
 
     byte[] plaintext = Files.readAllBytes(path);
-
-    byte[] cipherText = aead.encrypt(plaintext, key.getBytes(StandardCharsets.UTF_8));
+    byte[] cipherText = getAead().encrypt(plaintext, key.getBytes(StandardCharsets.UTF_8));
 
     String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-encrypted." + FilenameUtils.getExtension(inputFilePath);
     File outputFile = new File(outputFilePath);
@@ -66,6 +48,7 @@ public class TextImageEncryptionService {
     stream.write(cipherText);
   }
 
+  @Override
   public void decryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
     Path path = Paths.get(inputFilePath);
 
@@ -80,16 +63,15 @@ public class TextImageEncryptionService {
     }
 
     byte[] cipherText = Files.readAllBytes(path);
-
-
-    byte[] plainText = aead.decrypt(cipherText, key.getBytes(StandardCharsets.UTF_8));
+    byte[] plainText = getAead().decrypt(cipherText, key.getBytes(StandardCharsets.UTF_8));
 
     String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-decrypted." + FilenameUtils.getExtension(inputFilePath);
-
     File outputFile = new File(outputFilePath);
     outputFile.createNewFile();
     FileOutputStream stream = new FileOutputStream(outputFilePath, false);
     stream.write(plainText);
   }
+
+  protected abstract Aead getAead();
 
 }

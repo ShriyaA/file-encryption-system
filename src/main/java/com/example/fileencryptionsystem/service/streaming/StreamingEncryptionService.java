@@ -1,10 +1,6 @@
-package com.example.fileencryptionsystem.service;
+package com.example.fileencryptionsystem.service.streaming;
 
-import com.google.crypto.tink.CleartextKeysetHandle;
-import com.google.crypto.tink.JsonKeysetReader;
-import com.google.crypto.tink.JsonKeysetWriter;
-import com.google.crypto.tink.KeyTemplates;
-import com.google.crypto.tink.KeysetHandle;
+import com.example.fileencryptionsystem.service.IEncryptionService;
 import com.google.crypto.tink.StreamingAead;
 import com.google.crypto.tink.streamingaead.StreamingAeadConfig;
 import java.io.File;
@@ -20,31 +16,19 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class StreamingEncryptionService {
+public abstract class StreamingEncryptionService extends IEncryptionService {
 
-  private final StreamingAead streamingAead;
-
-  public StreamingEncryptionService() throws GeneralSecurityException, IOException {
-    StreamingAeadConfig.register();
-
-    String keySetPath = "streaming_AEAD_keyset.json";
-    KeysetHandle handle;
-    if(Files.exists(Paths.get(keySetPath))) {
-      File keyFile = new File(keySetPath);
-      handle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(keyFile));
-    } else {
-      handle = KeysetHandle.generateNew(KeyTemplates.get("AES256_CTR_HMAC_SHA256_1MB"));
-      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(new File(keySetPath)));
+  static {
+    try {
+      StreamingAeadConfig.register();
+    } catch (GeneralSecurityException e) {
+      e.printStackTrace();
     }
-
-    streamingAead = handle.getPrimitive(StreamingAead.class);
   }
 
-
+  @Override
   public void encryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
     Path path = Paths.get(inputFilePath);
     if (Files.notExists(path)) {
@@ -62,7 +46,7 @@ public class StreamingEncryptionService {
     outputFile.createNewFile();
 
     try (OutputStream ciphertextStream =
-        streamingAead.newEncryptingStream(new FileOutputStream(outputFile), key.getBytes(
+        getStreamingAead().newEncryptingStream(new FileOutputStream(outputFile), key.getBytes(
             StandardCharsets.UTF_8));
         InputStream plaintextStream = new FileInputStream(inputFilePath)) {
       byte[] chunk = new byte[1024];
@@ -73,6 +57,7 @@ public class StreamingEncryptionService {
     }
   }
 
+  @Override
   public void decryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
     Path path = Paths.get(inputFilePath);
 
@@ -87,7 +72,7 @@ public class StreamingEncryptionService {
     }
 
     InputStream ciphertextStream =
-        streamingAead.newDecryptingStream(new FileInputStream(inputFilePath),  key.getBytes(StandardCharsets.UTF_8));
+        getStreamingAead().newDecryptingStream(new FileInputStream(inputFilePath),  key.getBytes(StandardCharsets.UTF_8));
 
     String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-encrypted." + FilenameUtils.getExtension(inputFilePath);
     File outputFile = new File(outputFilePath);
@@ -102,5 +87,7 @@ public class StreamingEncryptionService {
     ciphertextStream.close();
     plaintextStream.close();
   }
+
+  protected abstract StreamingAead getStreamingAead();
 
 }

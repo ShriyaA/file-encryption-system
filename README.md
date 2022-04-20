@@ -27,12 +27,14 @@ payload-encryption.json example:
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/test-image.jpeg",
     "key": "Pranav encryption key",
-    "fileType": "IMAGE"
+    "fileType": "IMAGE",
+    "encryptionLevel": "STRONG"
   },
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/abc.txt",
     "key": "Pranav encryption key",
-    "fileType": "TEXT"
+    "fileType": "TEXT",
+    "encryptionLevel": "STRONG"
   }
 ]
 ```
@@ -50,12 +52,14 @@ payload-decryption.json example:
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/test-image-encrypted.jpeg",
     "key": "Pranav encryption key",
-    "fileType": "IMAGE"
+    "fileType": "IMAGE",
+    "encryptionLevel": "STRONG"
   },
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/abc-encrypted.txt",
     "key": "Pranav encryption key",
-    "fileType": "TEXT"
+    "fileType": "TEXT",
+    "encryptionLevel": "STRONG"
   }
 ]
 ```
