@@ -37,7 +37,9 @@ payload.json example:
 
 Decryption Request Example:
 
+```console
 curl -d "@payload.json" -H "Content-Type: application/json" -X POST localhost:8080/decrypt
+```
 
 payload.json example:
 
