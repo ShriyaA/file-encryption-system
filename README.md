@@ -26,11 +26,13 @@ payload-encryption.json example:
 [
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/test-image.jpeg",
-    "key": "Pranav encryption key"
+    "key": "Pranav encryption key",
+    "fileType": "IMAGE"
   },
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/abc.txt",
-    "key": "Pranav encryption key"
+    "key": "Pranav encryption key",
+    "fileType": "TEXT"
   }
 ]
 ```
@@ -47,11 +49,13 @@ payload-decryption.json example:
 [
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/test-image-encrypted.jpeg",
-    "key": "Pranav encryption key"
+    "key": "Pranav encryption key",
+    "fileType": "IMAGE"
   },
   {
     "inputFilePath": "/Users/pranavkapoor/Desktop/abc-encrypted.txt",
-    "key": "Pranav encryption key"
+    "key": "Pranav encryption key",
+    "fileType": "TEXT"
   }
 ]
 ```
