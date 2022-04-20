@@ -2,59 +2,77 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - File Upload &amp; Image Preview</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"-->
 <link rel="stylesheet" href="./style.css">
-
+<!--link rel="stylesheet" href="https://cryptii.com/assets/dist/style/cryptii.css"-->
 </head>
+
 <body>
-<!-- partial:index.partial.html -->
-<h1>Title</h1>
-<h2>File Upload & Image Preview</h2>
-<p class="lead">No Plugins <b>Just Javascript</b></p>
-
-<!--Settings  -->
-<form id="settings" class="settings">
-  <div id="mode">
-    Select mode: <input id="encryptMode" type="radio" name="selectMode" value="Encrypt" />
-    <label for="encryptMode">Encrypt</label>
-    <input id="decryptMode" type="radio" name="selectMode" value="Decrypt" />
-    <label for="decryptMode">Decrypt</label>
+  <div class="header">
+    <div class="inner_header">
+      <h1>Our Website</h1>
+    </div>
   </div>
-  <div id="file-type">
-      File Type: <select name="File Type" id="fileType">
-        <option value="text" selected="selected">Text</option>
-        <option value="img">Image</option>
-        <option value="video">Video</option>
-      </select>
-  </div>
-  <div id="password">
-      Password: <input type="password" id="pwd" name="pwd">
-  </div>
-</form>
-
-<!-- Upload  -->
-<form id="file-upload-form" class="uploader">
+  <div class="pipe">
+    <div class="chevron"></div>
+    <div class="chevron"></div>
+    <div class="chevron"></div>
+    <div class="block">
+      <div id="mode">
+        <p>Select mode: <input id="encryptMode" type="radio" name="selectMode" value="Encrypt" />
+        <label for="encryptMode">Encrypt</label>
+        <input id="decryptMode" type="radio" name="selectMode" value="Decrypt" />
+        <label for="decryptMode">Decrypt</label></p>
+      </div>
+      
+    </div>
+    <div class="chevron"></div>
+    <div class="chevron"></div>
+    <div class="chevron"></div>
+    <div class="block">
+      <div id="file-type" style="padding:10px">
+        <p>File Type: <select name="File Type" id="fileType">
+          <option value="text" selected="selected">Text</option>
+          <option value="img">Image</option>
+          <option value="video">Video</option>
+        </select></p>
+    </div>
+      <div id="password" style="padding:5px">
+        <p>Password: <input type="password" id="pwd" name="pwd"></p>
+      </div>
+      <div id="file-upload-div">
+      <form id="file-upload-form" class="uploader">
   
-  <input id="file-upload" type="file" name="fileUpload" accept=".doc,.txt,.pdf" />
-  <label for="file-upload" id="file-drag">
-    <img id="file-image" src="#" alt="Preview" class="hidden">
-    <div id="start">
-      <i class="fa fa-download" aria-hidden="true"></i>
-      <div>Select a file or drag here</div>
-      <div id="notimage" class="hidden">Please select an image</div>
-      <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+        <input id="file-upload" type="file" name="fileUpload" accept=".doc,.txt,.pdf" />
+        <label for="file-upload" id="file-drag">
+          <img id="file-image" src="#" alt="Preview" class="hidden">
+          <div id="start">
+            <i class="fa fa-download" aria-hidden="true"></i>
+            <div>Select a file or drag here</div>
+            <div id="notimage" class="hidden">Please select an image</div>
+            <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+          </div>
+          <div id="response" class="hidden">
+            <div id="messages"></div>
+            <progress class="progress" id="file-progress" value="0">
+              <span>0</span>%
+            </progress>
+          </div>
+        </label>
+      </form> 
+      <div id="button-div" class="uploader" style="text-align: center;">
+      <button type="button" class="btn hidden" id="startButton">Start</button>
+      <button type="button" class="btn hidden" id="downloadButton">Download</button>
     </div>
-    <div id="response" class="hidden">
-      <div id="messages"></div>
-      <progress class="progress" id="file-progress" value="0">
-        <span>0</span>%
-      </progress>
+      </div>     
     </div>
-  </label>
-  <button type="button" class="btn btn-primary" id="startButton">Start</button>
-  <button type="button" class="btn btn-primary" id="downloadButton">Download</button>
-</form>
+    <div class="chevron"></div>
+    <div class="chevron"></div>
+    <div class="chevron"></div>
+    <div class="block"></div>
+    <div class="chevron"></div>
+    <div class="chevron"></div>
+  </div>
 <!--form id="other-settings" class="settings">
   <input type="range" id="strength" list="encryptionStrengths">
   <datalist id="encryptionStrengths">
