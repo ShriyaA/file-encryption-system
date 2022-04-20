@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - File Upload &amp; Image Preview</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<h1>Title</h1>
+<h2>File Upload & Image Preview</h2>
+<p class="lead">No Plugins <b>Just Javascript</b></p>
+
+<!--Settings  -->
+<form id="settings" class="settings">
+  <div id="mode">
+    Select mode: <input id="encryptMode" type="radio" name="selectMode" value="Encrypt" />
+    <label for="encryptMode">Encrypt</label>
+    <input id="decryptMode" type="radio" name="selectMode" value="Decrypt" />
+    <label for="decryptMode">Decrypt</label>
+  </div>
+  <div id="file-type">
+      File Type: <select name="File Type" id="fileType">
+        <option value="text" selected="selected">Text</option>
+        <option value="img">Image</option>
+        <option value="video">Video</option>
+      </select>
+  </div>
+  <div id="password">
+      Password: <input type="password" id="pwd" name="pwd">
+  </div>
+</form>
+
+<!-- Upload  -->
+<form id="file-upload-form" class="uploader">
+  
+  <input id="file-upload" type="file" name="fileUpload" accept=".doc,.txt,.pdf" />
+  <label for="file-upload" id="file-drag">
+    <img id="file-image" src="#" alt="Preview" class="hidden">
+    <div id="start">
+      <i class="fa fa-download" aria-hidden="true"></i>
+      <div>Select a file or drag here</div>
+      <div id="notimage" class="hidden">Please select an image</div>
+      <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+    </div>
+    <div id="response" class="hidden">
+      <div id="messages"></div>
+      <progress class="progress" id="file-progress" value="0">
+        <span>0</span>%
+      </progress>
+    </div>
+  </label>
+  <button type="button" class="btn btn-primary" id="startButton">Start</button>
+  <button type="button" class="btn btn-primary" id="downloadButton">Download</button>
+</form>
+<!--form id="other-settings" class="settings">
+  <input type="range" id="strength" list="encryptionStrengths">
+  <datalist id="encryptionStrengths">
+    <option value="strong" label="Strong"></option>
+    <option value="stronger" label="Stronger"></option>
+    <option value="strongest" label="Strongest"></option>
+  </datalist>
+</form-->
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>

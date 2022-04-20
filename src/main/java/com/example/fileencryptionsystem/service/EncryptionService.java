@@ -19,9 +19,11 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @Service
+@CrossOrigin
 public class EncryptionService {
 
   private final KeysetHandle handle;
