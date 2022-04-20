@@ -14,14 +14,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 public class EncryptionService {
 
   private final KeysetHandle handle;
@@ -51,9 +54,18 @@ public class EncryptionService {
   }
 
   private void encryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    File inputFile = new File(inputFilePath);
+    Path path = Paths.get(inputFilePath);
+    if (Files.notExists(path)) {
+      log.error("No file exists at " + inputFilePath + ". Nothing to encrypt");
+      return;
+    }
 
-    byte[] plaintext = Files.readAllBytes(inputFile.toPath());
+    if (!Files.isReadable(path)) {
+      log.error("File at " + inputFilePath + " is not readable");
+      return;
+    }
+
+    byte[] plaintext = Files.readAllBytes(path);
 
     Aead aead = handle.getPrimitive(Aead.class);
     byte[] cipherText = aead.encrypt(plaintext, key.getBytes(StandardCharsets.UTF_8));
@@ -76,8 +88,19 @@ public class EncryptionService {
   }
 
   private void decryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    File inputFile = new File(inputFilePath);
-    byte[] cipherText = Files.readAllBytes(inputFile.toPath());
+    Path path = Paths.get(inputFilePath);
+
+    if (Files.notExists(Paths.get(inputFilePath))) {
+      log.error("No file exists at " + inputFilePath + ". Nothing to decrypt");
+      return;
+    }
+
+    if (!Files.isReadable(path)) {
+      log.error("File at " + inputFilePath + " is not readable");
+      return;
+    }
+
+    byte[] cipherText = Files.readAllBytes(path);
 
     Aead aead = handle.getPrimitive(Aead.class);
     byte[] plainText = aead.decrypt(cipherText, key.getBytes(StandardCharsets.UTF_8));
