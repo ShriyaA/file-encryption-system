@@ -1,6 +1,6 @@
 package com.example.fileencryptionsystem;
 
-import com.example.fileencryptionsystem.service.TextImageEncryptionService;
+import com.example.fileencryptionsystem.service.textimage.StrongerTextImageEncryptionService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class TextImageEncryptionServiceTest {
 
-  TextImageEncryptionService textImageEncryptionService = new TextImageEncryptionService();
+  StrongerTextImageEncryptionService strongerTextImageEncryptionService = new StrongerTextImageEncryptionService();
 
   public TextImageEncryptionServiceTest() throws GeneralSecurityException, IOException {
   }
@@ -28,12 +28,12 @@ public class TextImageEncryptionServiceTest {
     assert(url != null);
 
     String inputFile = url.getPath();
-    textImageEncryptionService.encryptFile(inputFile, key);
+    strongerTextImageEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    textImageEncryptionService.decryptFile(encryptedFile, key);
+    strongerTextImageEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));
@@ -51,12 +51,12 @@ public class TextImageEncryptionServiceTest {
     assert(url != null);
 
     String inputFile = url.getPath();
-    textImageEncryptionService.encryptFile(inputFile, key);
+    strongerTextImageEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    textImageEncryptionService.decryptFile(encryptedFile, key);
+    strongerTextImageEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));
@@ -74,12 +74,12 @@ public class TextImageEncryptionServiceTest {
     assert(url != null);
 
     String inputFile = url.getPath();
-    textImageEncryptionService.encryptFile(inputFile, key);
+    strongerTextImageEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    textImageEncryptionService.decryptFile(encryptedFile, key);
+    strongerTextImageEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));
@@ -97,12 +97,12 @@ public class TextImageEncryptionServiceTest {
     assert(url != null);
 
     String inputFile = url.getPath();
-    textImageEncryptionService.encryptFile(inputFile, key);
+    strongerTextImageEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    textImageEncryptionService.decryptFile(encryptedFile, key);
+    strongerTextImageEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));

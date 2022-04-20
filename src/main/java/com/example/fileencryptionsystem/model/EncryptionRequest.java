@@ -8,4 +8,5 @@ public class EncryptionRequest {
   String inputFilePath;
   String key;
   FileType fileType;
+  EncryptionLevel encryptionLevel;
 }
