@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TextImageEncryptionServiceTest {
 
@@ -108,5 +110,89 @@ public class TextImageEncryptionServiceTest {
     assert(Files.exists(Paths.get(decryptedFile)));
 
     assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(decryptedFile)) == -1L);
+  }
+
+  @Test
+  public void testEncryptionDecryptionTextNotEqual_TXT() throws GeneralSecurityException, IOException {
+    String en_key = "testing-key";
+	String de_key = "testing-key2";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("abc.txt");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongerTextImageEncryptionService.encryptFile(inputFile, en_key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(GeneralSecurityException.class, () ->
+			strongerTextImageEncryptionService.decryptFile(encryptedFile, de_key));
+	assertEquals("decryption failed", exception.getMessage());
+  }
+
+  @Test
+  public void testEncryptionDecryptionTextNotEqual_PDF() throws GeneralSecurityException, IOException {
+    String en_key = "testing-key";
+	String de_key = "testing-key2";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("abc.pdf");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongerTextImageEncryptionService.encryptFile(inputFile, en_key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(GeneralSecurityException.class, () ->
+			strongerTextImageEncryptionService.decryptFile(encryptedFile, de_key));
+	assertEquals("decryption failed", exception.getMessage());
+  }
+
+  @Test
+  public void testEncryptionDecryptionImageNotEqual_JPG() throws GeneralSecurityException, IOException {
+    String en_key = "testing-key";
+    String de_key = "testing-key2";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("image_testing.jpg");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongerTextImageEncryptionService.encryptFile(inputFile, en_key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(GeneralSecurityException.class, () ->
+			strongerTextImageEncryptionService.decryptFile(encryptedFile, de_key));
+	assertEquals("decryption failed", exception.getMessage());
+  }
+
+  @Test
+  public void testEncryptionDecryptionImageNotEqual_PNG() throws GeneralSecurityException, IOException {
+    String en_key = "testing-key";
+    String de_key = "testing-key2";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("image_testing.png");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongerTextImageEncryptionService.encryptFile(inputFile, en_key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(GeneralSecurityException.class, () ->
+			strongerTextImageEncryptionService.decryptFile(encryptedFile, de_key));
+	assertEquals("decryption failed", exception.getMessage());
   }
 }
