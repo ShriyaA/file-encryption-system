@@ -30,6 +30,7 @@ function fileType(){
 // File Upload
 // 
 function ekUpload(){
+  var files;
   function Init() {
 
     console.log("Upload Initialised");
@@ -48,6 +49,9 @@ function ekUpload(){
       fileDrag.addEventListener('dragleave', fileDragHover, false);
       fileDrag.addEventListener('drop', fileSelectHandler, false);
     }
+
+    var startButton = document.getElementById('startButton')
+    startButton.addEventListener('click', uploadFiles);
   }
 
   function fileDragHover(e) {
@@ -61,7 +65,7 @@ function ekUpload(){
 
   function fileSelectHandler(e) {
     // Fetch FileList object
-    var files = e.target.files || e.dataTransfer.files;
+    files = e.target.files || e.dataTransfer.files;
 
     // Cancel event and hover styling
     fileDragHover(e);
@@ -69,7 +73,6 @@ function ekUpload(){
     // Process all File objects
     for (var i = 0, f; f = files[i]; i++) {
       parseFile(f);
-      uploadFile(f);
     }
   }
 
@@ -93,10 +96,6 @@ function ekUpload(){
 
     document.getElementById('start').classList.add("hidden");
     document.getElementById('response').classList.remove("hidden");
-    document.getElementById('notimage').classList.add("hidden");
-      // Thumbnail Preview
-    document.getElementById('file-image').classList.remove("hidden");
-    document.getElementById('file-image').src = URL.createObjectURL(file);
   }
 
   function setProgressMaxValue(e) {
@@ -115,10 +114,15 @@ function ekUpload(){
     }
   }
 
+  function uploadFiles() {
+    for (var i = 0, f; f = files[i]; i++) {
+      uploadFile(f);
+    }
+  }
+
   function uploadFile(file) {
 
     var xhr = new XMLHttpRequest(),
-      fileInput = document.getElementById('class-roster-file'),
       pBar = document.getElementById('file-progress'),
       fileSizeLimit = 1024; // In MB
     if (xhr.upload) {
@@ -132,16 +136,14 @@ function ekUpload(){
         // File received / failed
         xhr.onreadystatechange = function(e) {
           if (xhr.readyState == 4) {
-            // Everything is good!
-
-            // progress.className = (xhr.status == 200 ? "success" : "failure");
-            // document.location.reload(true);
+            downloadFile(xhr.response)
           }
         };
         pwd = document.getElementById("pwd").value;
         var radios = document.getElementsByName("selectMode");
         var selected = Array.from(radios).find(radio => radio.checked);
         var mode = selected.value;
+        var fileTypeSelected = document.getElementById('fileType').value
 
         if (mode == "Encrypt"){
           reqUrl = encryptionUrl; 
@@ -149,21 +151,38 @@ function ekUpload(){
         else {
           reqUrl = decryptionUrl;
         }
-        var req = [{
-          inputFilePath: file.name,
+        var req = {
+          fileType: fileTypeSelected,
           key: pwd
-        }]
+        }
+        var formData = new FormData();
+        formData.append("body", JSON.stringify(req))
+        formData.append("file", file)
         // Start upload
         xhr.open('POST', reqUrl, true);
         //xhr.setRequestHeader('X-File-Name', file.name);
         //xhr.setRequestHeader('X-File-Size', file.size);
         xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.responseType = 'blob';
         //xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-        xhr.send(JSON.stringify(req));
+        xhr.send(formData);
       } else {
         output('Please upload a smaller file (< ' + fileSizeLimit + ' MB).');
       }
     }
+  }
+
+  function downloadFile(response) {
+    var contentDispo = response.getResponseHeader('Content-Disposition');
+    var fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+    saveBlob(response, fileName);
+  }
+
+  function saveBlob(blob, fileName) {
+    var a = document.createElement('a');
+    a.href = window.URL.createObjectURL(blob);
+    a.download = fileName;
+    a.dispatchEvent(new MouseEvent('click'));
   }
 
   // Check for the various File API support.
