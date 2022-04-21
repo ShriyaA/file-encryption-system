@@ -1,6 +1,7 @@
 package com.example.fileencryptionsystem;
 
 import com.example.fileencryptionsystem.service.textimage.StrongerTextImageEncryptionService;
+import com.example.fileencryptionsystem.service.textimage.StrongTextImageEncryptionService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -11,10 +12,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
+import java.io.FileNotFoundException;
+//import static sun.nio.cs.Surrogate.is;
+import static org.assertj.core.api.Assertions.*;
 
 public class TextImageEncryptionServiceTest {
 
   StrongerTextImageEncryptionService strongerTextImageEncryptionService = new StrongerTextImageEncryptionService();
+  StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTextImageEncryptionService();
 
   public TextImageEncryptionServiceTest() throws GeneralSecurityException, IOException {
   }
@@ -293,6 +298,46 @@ public class TextImageEncryptionServiceTest {
 
 	Exception exception = assertThrows(GeneralSecurityException.class, () ->
 			strongerTextImageEncryptionService.decryptFile(encryptedFile, de_key));
+	assertEquals("decryption failed", exception.getMessage());
+  }
+
+  @Test
+  public void testStrongEncryptionStrongerDecryptionText_TXT() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("abc.txt");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongTextImageEncryptionService.encryptFile(inputFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(GeneralSecurityException.class, () ->
+			strongerTextImageEncryptionService.decryptFile(encryptedFile, key));
+	assertEquals("decryption failed", exception.getMessage());
+  }
+
+  @Test
+  public void testStrongerEncryptionStrongDecryptionText_TXT() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("abc.txt");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongerTextImageEncryptionService.encryptFile(inputFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(GeneralSecurityException.class, () ->
+			strongTextImageEncryptionService.decryptFile(encryptedFile, key));
 	assertEquals("decryption failed", exception.getMessage());
   }
 }
