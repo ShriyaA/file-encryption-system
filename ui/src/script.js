@@ -93,9 +93,10 @@ function ekUpload(){
       // var fileType = file.type;
       // console.log(fileType);
       var fileName = file.name;
-      
-      document.getElementById('start').classList.add("hidden");
       document.getElementById('response').classList.remove("hidden");
+      document.getElementById('file-progress').style.display = 'none';
+      document.getElementById('start').classList.add("hidden");
+      
     }
     
     function setProgressMaxValue(e) {
@@ -143,7 +144,12 @@ function ekUpload(){
               var value = parts.join(': ');
               headerMap[header] = value;
             });
-            downloadFile(xhr.response, headerMap)
+            if (xhr.status == 200){
+              downloadFile(xhr.response, headerMap)
+            }
+            else if (xhr.status == 400){
+              alert("Encryption Strength or Password incorrect");
+            }
           }
         };
         pwd = document.getElementById("pwd").value;
@@ -192,38 +198,29 @@ function ekUpload(){
       link.href = blobUrl;
       link.download = "encrypted_file";
       link.innerHTML = "Click here to download the file";
+      link.style.display = 'none';
       document.body.appendChild(link); // Or append it whereever you want
       document.querySelector('a').click()
+      resetPage();
     }
 
-    function base64ToArrayBuffer(base64) {
-      var binaryString = window.atob(base64);
-      var binaryLen = binaryString.length;
-      var bytes = new Uint8Array(binaryLen);
-      for (var i = 0; i < binaryLen; i++) {
-         var ascii = binaryString.charCodeAt(i);
-         bytes[i] = ascii;
-      }
-      return bytes;
-   }
-   function saveByteArray(reportName, byte) {
-    var blob = new Blob([byte], {type: "application/octet-stream"});
-    var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    var fileName = reportName;
-    link.download = fileName;
-    link.click();
-  };
+    function resetPage(){
+      document.getElementById('start').classList.remove("hidden");
+      output('');
+      pBar = document.getElementById('file-progress');
+      pBar.value = 0;
+      pBar.style.display = 'none';
+      document.getElementById('pwd').value = "";
+    } 
 
-    
     // Check for the various File API support.
     if (window.File && window.FileList && window.FileReader) {
       Init();
     } else {
       document.getElementById('file-drag').style.display = 'none';
     }
-  }
-
+  };
+  
   function passwordToggle(){
     const togglePassword = document.getElementById('togglePassword');
     const password = document.getElementById('pwd');
