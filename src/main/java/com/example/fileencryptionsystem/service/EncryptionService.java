@@ -66,9 +66,18 @@ public class EncryptionService {
   }
 
   public File encryptFile(MultipartFile file, EncryptionRequest encryptionRequest) throws GeneralSecurityException, IOException {
-    filesStorageService.save(file);
-    Resource tempFile = filesStorageService.load(file.getOriginalFilename());
-    return encryptFile(tempFile.getFile().getAbsolutePath(), encryptionRequest.getKey(), encryptionRequest.getFileType(), encryptionRequest.getEncryptionLevel());
+    Resource tempFile = null;
+    try {
+      filesStorageService.save(file);
+      tempFile = filesStorageService.load(file.getOriginalFilename());
+      return encryptFile(tempFile.getFile().getAbsolutePath(),
+          encryptionRequest.getKey(), encryptionRequest.getFileType(),
+          encryptionRequest.getEncryptionLevel());
+    } finally {
+      if (tempFile != null) {
+        filesStorageService.delete(tempFile.getFile().toString());
+      }
+    }
   }
 
   private File encryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
@@ -114,9 +123,18 @@ public class EncryptionService {
   }
 
   public File decryptFile(MultipartFile file, DecryptionRequest decryptionRequest) throws GeneralSecurityException, IOException {
-    filesStorageService.save(file);
-    Resource tempFile = filesStorageService.load(file.getOriginalFilename());
-    return decryptFile(tempFile.getFile().getAbsolutePath(), decryptionRequest.getKey(), decryptionRequest.getFileType(), decryptionRequest.getEncryptionLevel());
+    Resource tempFile = null;
+    try {
+      filesStorageService.save(file);
+      tempFile = filesStorageService.load(file.getOriginalFilename());
+      return decryptFile(tempFile.getFile().getAbsolutePath(),
+          decryptionRequest.getKey(), decryptionRequest.getFileType(),
+          decryptionRequest.getEncryptionLevel());
+    } finally {
+      if (tempFile != null) {
+        filesStorageService.delete(tempFile.getFile().toString());
+      }
+    }
   }
 
   private File decryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
