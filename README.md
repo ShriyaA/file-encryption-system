@@ -15,52 +15,12 @@ To run:
 
 The server will start at localhost:8080
 
+We need to use a tool like Postman to make the requests and attach files
+
 Encryption Request Example:
 
-```console
-curl -d "@payload-encryption.json" -H "Content-Type: application/json" -X POST localhost:8080/encrypt
-```
-
-payload-encryption.json example:
-
-```json
-[
-  {
-    "inputFilePath": "/Users/pranavkapoor/Desktop/test-image.jpeg",
-    "key": "Pranav encryption key",
-    "fileType": "IMAGE",
-    "encryptionLevel": "STRONG"
-  },
-  {
-    "inputFilePath": "/Users/pranavkapoor/Desktop/abc.txt",
-    "key": "Pranav encryption key",
-    "fileType": "TEXT",
-    "encryptionLevel": "STRONGER"
-  }
-]
-```
+![Encrypt](readme_images/encrypt.png)
 
 Decryption Request Example:
 
-```console
-curl -d "@payload-decryption.json" -H "Content-Type: application/json" -X POST localhost:8080/decrypt
-```
-
-payload-decryption.json example:
-
-```json
-[
-  {
-    "inputFilePath": "/Users/pranavkapoor/Desktop/test-image-encrypted.jpeg",
-    "key": "Pranav encryption key",
-    "fileType": "IMAGE",
-    "encryptionLevel": "STRONG"
-  },
-  {
-    "inputFilePath": "/Users/pranavkapoor/Desktop/abc-encrypted.txt",
-    "key": "Pranav encryption key",
-    "fileType": "TEXT",
-    "encryptionLevel": "STRONGER"
-  }
-]
-```
+![Decrypt](readme_images/decrypt.png)
