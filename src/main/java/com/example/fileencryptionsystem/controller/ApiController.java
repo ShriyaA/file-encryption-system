@@ -3,18 +3,23 @@ package com.example.fileencryptionsystem.controller;
 import com.example.fileencryptionsystem.model.DecryptionRequest;
 import com.example.fileencryptionsystem.model.EncryptionRequest;
 import com.example.fileencryptionsystem.service.EncryptionService;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.POST, RequestMethod.GET,
+    RequestMethod.PUT})
 @Slf4j
 public class ApiController {
 
@@ -25,27 +30,27 @@ public class ApiController {
   }
 
   @PostMapping(path = "/encrypt",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.TEXT_PLAIN_VALUE)
   @ResponseBody
-  ResponseEntity<String> encrypt(@RequestBody List<EncryptionRequest> encryptionRequests) {
+  ResponseEntity<String> encrypt(@RequestPart MultipartFile file, @RequestPart EncryptionRequest encryptionRequest) {
     try {
-      encryptionService.encryptFiles(encryptionRequests);
+      encryptionService.encryptFile(file, encryptionRequest);
       return ResponseEntity.ok("Encryption Completed.");
-    } catch (IllegalStateException e) {
+    } catch (IllegalStateException | GeneralSecurityException | IOException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
   }
 
   @PostMapping(path = "/decrypt",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.TEXT_PLAIN_VALUE)
   @ResponseBody
-  ResponseEntity<String> decrypt(@RequestBody List<DecryptionRequest> decryptionRequests) {
+  ResponseEntity<String> decrypt(@RequestPart MultipartFile file, @RequestPart DecryptionRequest decryptionRequest) {
     try {
-      encryptionService.decryptFiles(decryptionRequests);
+      encryptionService.decryptFile(file, decryptionRequest);
       return ResponseEntity.ok("Decryption Completed.");
-    } catch (IllegalStateException e) {
+    } catch (IllegalStateException | GeneralSecurityException | IOException e) {
       return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
   }
