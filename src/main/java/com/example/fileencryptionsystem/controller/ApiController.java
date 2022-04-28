@@ -48,7 +48,7 @@ public class ApiController {
           .contentType(MediaTypeUtil.getMediaTypeForFileName(outputFile.toPath()))
           .body(resource);
     } catch (IllegalStateException | GeneralSecurityException | IOException e) {
-      return ResponseEntity.unprocessableEntity().build();
+      return ResponseEntity.badRequest().build();
     }
   }
 
@@ -65,7 +65,7 @@ public class ApiController {
           .contentType(MediaTypeUtil.getMediaTypeForFileName(outputFile.toPath()))
           .body(resource);
     } catch (IllegalStateException | GeneralSecurityException | IOException e) {
-      return ResponseEntity.unprocessableEntity().build();
+      return ResponseEntity.badRequest().build();
     }
   }
 

@@ -65,9 +65,12 @@ public abstract class IEncryptionService {
     return outputFile;
   }
 
+  protected abstract String getKeySetPath();
+
   protected abstract void performEncryption(Path inputFilePath, File outputFile, byte[] keyBytes)
       throws IOException, GeneralSecurityException;
 
   protected abstract void performDecryption(Path inputFilePath, File outputFile, byte[] keyBytes)
       throws IOException, GeneralSecurityException;
+
 }

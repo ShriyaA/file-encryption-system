@@ -1,9 +1,9 @@
 package com.example.fileencryptionsystem;
 
-import com.example.fileencryptionsystem.service.streaming.StrongerStreamingEncryptionService;
-import com.example.fileencryptionsystem.service.streaming.StrongStreamingEncryptionService;
-import com.example.fileencryptionsystem.service.textimage.StrongerTextImageEncryptionService;
-import com.example.fileencryptionsystem.service.textimage.StrongTextImageEncryptionService;
+import com.example.fileencryptionsystem.service.streaming.strong.VideoStrongEncryptionService;
+import com.example.fileencryptionsystem.service.streaming.stronger.AudioStrongerEncryptionService;
+import com.example.fileencryptionsystem.service.streaming.stronger.VideoStrongerEncryptionService;
+import com.example.fileencryptionsystem.service.textimage.stronger.TextStrongerEncryptionService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class StreamingEncryptionServiceTest {
 
-  StrongerStreamingEncryptionService strongerStreamingEncryptionService = new StrongerStreamingEncryptionService();
-  StrongStreamingEncryptionService strongStreamingEncryptionService = new StrongStreamingEncryptionService();
-StrongerTextImageEncryptionService strongerTextImageEncryptionService = new StrongerTextImageEncryptionService();
-StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTextImageEncryptionService();
+  VideoStrongEncryptionService videoStrongEncryptionService = new VideoStrongEncryptionService();
+  VideoStrongerEncryptionService videoStrongerEncryptionService = new VideoStrongerEncryptionService();
+  AudioStrongerEncryptionService audioStrongerEncryptionService = new AudioStrongerEncryptionService();
+  TextStrongerEncryptionService textStrongerEncryptionService = new TextStrongerEncryptionService();
 
   public StreamingEncryptionServiceTest() throws GeneralSecurityException, IOException {
   }
@@ -35,12 +35,12 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, key);
+    videoStrongerEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    strongerStreamingEncryptionService.decryptFile(encryptedFile, key);
+    videoStrongerEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));
@@ -60,7 +60,7 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     String inputFile = url.getPath();
 
     Exception exception = assertThrows(IOException.class, () ->
-        strongerStreamingEncryptionService.decryptFile(inputFile, key));
+        videoStrongerEncryptionService.decryptFile(inputFile, key));
     assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
@@ -77,12 +77,12 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, key);
+    videoStrongerEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    strongerStreamingEncryptionService.decryptFile(encryptedFile, key);
+    videoStrongerEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));
@@ -102,7 +102,7 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     String inputFile = url.getPath();
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(inputFile, key));
+      videoStrongerEncryptionService.decryptFile(inputFile, key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
@@ -119,12 +119,12 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, key);
+    audioStrongerEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    strongerStreamingEncryptionService.decryptFile(encryptedFile, key);
+    audioStrongerEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));
@@ -144,7 +144,7 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     String inputFile = url.getPath();
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(inputFile, key));
+      audioStrongerEncryptionService.decryptFile(inputFile, key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
@@ -161,12 +161,12 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, key);
+    audioStrongerEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
-    strongerStreamingEncryptionService.decryptFile(encryptedFile, key);
+    audioStrongerEncryptionService.decryptFile(encryptedFile, key);
 
     String decryptedFile = File.separator + FilenameUtils.getPath(encryptedFile) + FilenameUtils.getBaseName(encryptedFile) + "-decrypted." + FilenameUtils.getExtension(encryptedFile);
     assert(Files.exists(Paths.get(decryptedFile)));
@@ -186,7 +186,7 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     String inputFile = url.getPath();
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(inputFile, key));
+      audioStrongerEncryptionService.decryptFile(inputFile, key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
@@ -204,13 +204,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, en_key);
+    videoStrongerEncryptionService.encryptFile(inputFile, en_key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(encryptedFile, de_key));
+      videoStrongerEncryptionService.decryptFile(encryptedFile, de_key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 
@@ -225,13 +225,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, en_key);
+    videoStrongerEncryptionService.encryptFile(inputFile, en_key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(encryptedFile, de_key));
+      videoStrongerEncryptionService.decryptFile(encryptedFile, de_key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 
@@ -246,13 +246,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, en_key);
+    audioStrongerEncryptionService.encryptFile(inputFile, en_key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(encryptedFile, de_key));
+      audioStrongerEncryptionService.decryptFile(encryptedFile, de_key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 
@@ -267,13 +267,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, en_key);
+    audioStrongerEncryptionService.encryptFile(inputFile, en_key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(encryptedFile, de_key));
+      audioStrongerEncryptionService.decryptFile(encryptedFile, de_key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 
@@ -287,13 +287,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongStreamingEncryptionService.encryptFile(inputFile, key);
+    videoStrongEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(encryptedFile, key));
+      videoStrongerEncryptionService.decryptFile(encryptedFile, key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 
@@ -307,13 +307,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongerStreamingEncryptionService.encryptFile(inputFile, key);
+    videoStrongerEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongStreamingEncryptionService.decryptFile(encryptedFile, key));
+      videoStrongEncryptionService.decryptFile(encryptedFile, key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 
@@ -327,14 +327,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongStreamingEncryptionService.encryptFile(inputFile, key);
+    videoStrongerEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(GeneralSecurityException.class, () ->
-			//strongerStreamingEncryptionService.decryptFile(encryptedFile, key));
-			strongTextImageEncryptionService.decryptFile(encryptedFile, key));
+      textStrongerEncryptionService.decryptFile(encryptedFile, key));
 	assertEquals("decryption failed", exception.getMessage());
   }
 
@@ -348,14 +347,13 @@ StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTe
     assert(url != null);
 
     String inputFile = url.getPath();
-    strongTextImageEncryptionService.encryptFile(inputFile, key);
+    textStrongerEncryptionService.encryptFile(inputFile, key);
 
     String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
     assert(Files.exists(Paths.get(encryptedFile)));
 
 	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(encryptedFile, key));
-			//strongTextImageEncryptionService.decryptFile(encryptedFile, key));
+			videoStrongEncryptionService.decryptFile(encryptedFile, key));
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 
