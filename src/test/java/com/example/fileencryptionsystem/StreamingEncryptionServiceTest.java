@@ -45,7 +45,7 @@ public class StreamingEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionVideo_MP4() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionVideo_MP4() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -87,7 +87,7 @@ public class StreamingEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionVideo_AVI() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionVideo_AVI() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -129,7 +129,7 @@ public class StreamingEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionVideo_MP3() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionVideo_MP3() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -171,7 +171,7 @@ public class StreamingEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionVideo_WAV() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionVideo_WAV() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
