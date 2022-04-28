@@ -2,6 +2,8 @@ package com.example.fileencryptionsystem;
 
 import com.example.fileencryptionsystem.service.textimage.StrongerTextImageEncryptionService;
 import com.example.fileencryptionsystem.service.textimage.StrongTextImageEncryptionService;
+import com.example.fileencryptionsystem.service.streaming.StrongerStreamingEncryptionService;
+import com.example.fileencryptionsystem.service.streaming.StrongStreamingEncryptionService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -17,6 +19,8 @@ public class TextImageEncryptionServiceTest {
 
   StrongerTextImageEncryptionService strongerTextImageEncryptionService = new StrongerTextImageEncryptionService();
   StrongTextImageEncryptionService strongTextImageEncryptionService = new StrongTextImageEncryptionService();
+StrongerStreamingEncryptionService strongerStreamingEncryptionService = new StrongerStreamingEncryptionService();
+StrongStreamingEncryptionService strongStreamingEncryptionService = new StrongStreamingEncryptionService();
 
   public TextImageEncryptionServiceTest() throws GeneralSecurityException, IOException {
   }
@@ -308,5 +312,47 @@ public class TextImageEncryptionServiceTest {
 	Exception exception = assertThrows(GeneralSecurityException.class, () ->
 			strongTextImageEncryptionService.decryptFile(encryptedFile, key));
 	assertEquals("decryption failed", exception.getMessage());
+  }
+
+  @Test
+  public void testEncryptionAudioDecryptionImage() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("audio_testing.mp3");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongStreamingEncryptionService.encryptFile(inputFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(GeneralSecurityException.class, () ->
+			//strongerStreamingEncryptionService.decryptFile(encryptedFile, key));
+			strongTextImageEncryptionService.decryptFile(encryptedFile, key));
+	assertEquals("decryption failed", exception.getMessage());
+  }
+
+  @Test
+  public void testEncryptionImageDecryptionAudio() throws GeneralSecurityException, IOException {
+    String key = "testing-key";
+
+    ClassLoader classLoader = getClass().getClassLoader();
+    URL url = classLoader.getResource("image_testing.jpg");
+
+    assert(url != null);
+
+    String inputFile = url.getPath();
+    strongTextImageEncryptionService.encryptFile(inputFile, key);
+
+    String encryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-encrypted." + FilenameUtils.getExtension(inputFile);
+    assert(Files.exists(Paths.get(encryptedFile)));
+
+	Exception exception = assertThrows(IOException.class, () ->
+			strongerStreamingEncryptionService.decryptFile(encryptedFile, key));
+			//strongTextImageEncryptionService.decryptFile(encryptedFile, key));
+	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
   }
 }
