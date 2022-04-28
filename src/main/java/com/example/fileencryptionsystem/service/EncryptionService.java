@@ -1,95 +1,90 @@
 package com.example.fileencryptionsystem.service;
 
 import com.example.fileencryptionsystem.model.DecryptionRequest;
+import com.example.fileencryptionsystem.model.EncryptionLevel;
 import com.example.fileencryptionsystem.model.EncryptionRequest;
-import com.google.crypto.tink.Aead;
-import com.google.crypto.tink.CleartextKeysetHandle;
-import com.google.crypto.tink.JsonKeysetReader;
-import com.google.crypto.tink.JsonKeysetWriter;
-import com.google.crypto.tink.KeyTemplates;
-import com.google.crypto.tink.KeysetHandle;
-import com.google.crypto.tink.aead.AeadConfig;;
-import java.io.File;
-import java.io.FileOutputStream;
+import com.example.fileencryptionsystem.model.FileType;
+import com.example.fileencryptionsystem.service.streaming.StrongStreamingEncryptionService;
+import com.example.fileencryptionsystem.service.streaming.StrongerStreamingEncryptionService;
+import com.example.fileencryptionsystem.service.textimage.StrongTextImageEncryptionService;
+import com.example.fileencryptionsystem.service.textimage.StrongerTextImageEncryptionService;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.List;
-import org.apache.commons.io.FilenameUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @Service
-@CrossOrigin
+@Slf4j
 public class EncryptionService {
 
-  private final KeysetHandle handle;
+  private final StrongTextImageEncryptionService strongTextImageEncryptionService;
+  private final StrongerTextImageEncryptionService strongerTextImageEncryptionService;
+  private final StrongStreamingEncryptionService strongStreamingEncryptionService;
+  private final StrongerStreamingEncryptionService strongerStreamingEncryptionService;
 
-  public EncryptionService() throws GeneralSecurityException, IOException {
-    AeadConfig.register();
-
-    String keySetPath = "my_keyset.json";
-    if(Files.exists(Paths.get(keySetPath))) {
-      File keyFile = new File(keySetPath);
-      handle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(keyFile));
-    } else {
-      handle = KeysetHandle.generateNew(KeyTemplates.get("AES256_GCM"));
-      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(new File(keySetPath)));
-    }
-
+  public EncryptionService(StrongTextImageEncryptionService strongTextImageEncryptionService,
+      StrongerTextImageEncryptionService strongerTextImageEncryptionService,
+      StrongStreamingEncryptionService strongStreamingEncryptionService,
+      StrongerStreamingEncryptionService strongerStreamingEncryptionService) {
+    this.strongTextImageEncryptionService = strongTextImageEncryptionService;
+    this.strongerTextImageEncryptionService = strongerTextImageEncryptionService;
+    this.strongStreamingEncryptionService = strongStreamingEncryptionService;
+    this.strongerStreamingEncryptionService = strongerStreamingEncryptionService;
   }
 
   public void encryptFiles(List<EncryptionRequest> encryptionRequests) {
     encryptionRequests.forEach(er -> {
       try {
-        encryptFile(er.getInputFilePath(), er.getKey());
+        encryptFile(er.getInputFilePath(), er.getKey(), er.getFileType(), er.getEncryptionLevel());
       } catch (GeneralSecurityException | IOException e) {
         e.printStackTrace();
       }
     });
   }
 
-  private void encryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    File inputFile = new File(inputFilePath);
+  private void encryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
 
-    byte[] plaintext = Files.readAllBytes(inputFile.toPath());
-
-    Aead aead = handle.getPrimitive(Aead.class);
-    byte[] cipherText = aead.encrypt(plaintext, key.getBytes(StandardCharsets.UTF_8));
-
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-encrypted." + FilenameUtils.getExtension(inputFilePath);
-    File outputFile = new File(outputFilePath);
-    outputFile.createNewFile();
-    FileOutputStream stream = new FileOutputStream(outputFile, false);
-    stream.write(cipherText);
+    if (FileType.TEXT == fileType || FileType.IMAGE == fileType) {
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongTextImageEncryptionService.encryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerTextImageEncryptionService.encryptFile(inputFilePath, key);
+      }
+    } else if (FileType.AUDIO == fileType || FileType.VIDEO == fileType) {
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongStreamingEncryptionService.encryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerStreamingEncryptionService.encryptFile(inputFilePath, key);
+      }
+    }
   }
 
   public void decryptFiles(List<DecryptionRequest> decryptionRequests) {
     decryptionRequests.forEach(dr -> {
       try {
-        decryptFile(dr.getInputFilePath(), dr.getKey());
+        decryptFile(dr.getInputFilePath(), dr.getKey(), dr.getFileType(), dr.getEncryptionLevel());
       } catch (GeneralSecurityException | IOException e) {
         e.printStackTrace();
       }
     });
   }
 
-  private void decryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    File inputFile = new File(inputFilePath);
-    byte[] cipherText = Files.readAllBytes(inputFile.toPath());
-
-    Aead aead = handle.getPrimitive(Aead.class);
-    byte[] plainText = aead.decrypt(cipherText, key.getBytes(StandardCharsets.UTF_8));
-
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-decrypted." + FilenameUtils.getExtension(inputFilePath);
-
-    File outputFile = new File(outputFilePath);
-    outputFile.createNewFile();
-    FileOutputStream stream = new FileOutputStream(outputFilePath, false);
-    stream.write(plainText);
+  private void decryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
+    if (FileType.TEXT == fileType || FileType.IMAGE == fileType) {
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongTextImageEncryptionService.decryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerTextImageEncryptionService.decryptFile(inputFilePath, key);
+      }
+    } else if (FileType.AUDIO == fileType || FileType.VIDEO == fileType) {
+      if (EncryptionLevel.STRONG == encryptionLevel) {
+        strongStreamingEncryptionService.decryptFile(inputFilePath, key);
+      } else if (EncryptionLevel.STRONGER == encryptionLevel) {
+        strongerStreamingEncryptionService.decryptFile(inputFilePath, key);
+      }
+    }
   }
-
 }
