@@ -12,9 +12,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
-import java.io.FileNotFoundException;
-//import static sun.nio.cs.Surrogate.is;
-import static org.assertj.core.api.Assertions.*;
 
 public class TextImageEncryptionServiceTest {
 
@@ -49,7 +46,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_TXT() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_TXT() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -63,14 +60,7 @@ public class TextImageEncryptionServiceTest {
 	assertEquals("decryption failed", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-    strongerTextImageEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists(Paths.get(decryptedFile)));
   }
 
   @Test
@@ -97,7 +87,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_PDF() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_PDF() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -111,14 +101,7 @@ public class TextImageEncryptionServiceTest {
 	assertEquals("decryption failed", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-    strongerTextImageEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists(Paths.get(decryptedFile)));
   }
 
   @Test
@@ -145,7 +128,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_JPG() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_JPG() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -159,14 +142,7 @@ public class TextImageEncryptionServiceTest {
 	assertEquals("decryption failed", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-    strongerTextImageEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists(Paths.get(decryptedFile)));
   }
 
   @Test
@@ -193,7 +169,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_PNG() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_PNG() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -207,14 +183,7 @@ public class TextImageEncryptionServiceTest {
 	assertEquals("decryption failed", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-    strongerTextImageEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists(Paths.get(decryptedFile)));
   }
 
   @Test
