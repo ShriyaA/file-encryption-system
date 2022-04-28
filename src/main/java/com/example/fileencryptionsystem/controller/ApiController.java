@@ -3,10 +3,14 @@ package com.example.fileencryptionsystem.controller;
 import com.example.fileencryptionsystem.model.DecryptionRequest;
 import com.example.fileencryptionsystem.model.EncryptionRequest;
 import com.example.fileencryptionsystem.service.EncryptionService;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,12 +37,16 @@ public class ApiController {
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.TEXT_PLAIN_VALUE)
   @ResponseBody
-  ResponseEntity<String> encrypt(@RequestPart MultipartFile file, @RequestPart EncryptionRequest encryptionRequest) {
+  ResponseEntity<Resource> encrypt(@RequestPart MultipartFile file, @RequestPart EncryptionRequest encryptionRequest) {
     try {
-      encryptionService.encryptFile(file, encryptionRequest);
-      return ResponseEntity.ok("Encryption Completed.");
+      File outputFile = encryptionService.encryptFile(file, encryptionRequest);
+      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(Paths.get(outputFile.getAbsolutePath())));
+      return ResponseEntity.ok()
+          .contentLength(outputFile.length())
+          .contentType(MediaType.APPLICATION_OCTET_STREAM)
+          .body(resource);
     } catch (IllegalStateException | GeneralSecurityException | IOException e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+      return ResponseEntity.unprocessableEntity().build();
     }
   }
 
@@ -46,12 +54,16 @@ public class ApiController {
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.TEXT_PLAIN_VALUE)
   @ResponseBody
-  ResponseEntity<String> decrypt(@RequestPart MultipartFile file, @RequestPart DecryptionRequest decryptionRequest) {
+  ResponseEntity<Resource> decrypt(@RequestPart MultipartFile file, @RequestPart DecryptionRequest decryptionRequest) {
     try {
-      encryptionService.decryptFile(file, decryptionRequest);
-      return ResponseEntity.ok("Decryption Completed.");
+      File outputFile = encryptionService.decryptFile(file, decryptionRequest);
+      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(Paths.get(outputFile.getAbsolutePath())));
+      return ResponseEntity.ok()
+          .contentLength(outputFile.length())
+          .contentType(MediaType.APPLICATION_OCTET_STREAM)
+          .body(resource);
     } catch (IllegalStateException | GeneralSecurityException | IOException e) {
-      return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+      return ResponseEntity.unprocessableEntity().build();
     }
   }
 

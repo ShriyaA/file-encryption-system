@@ -13,43 +13,45 @@ import org.apache.commons.io.FilenameUtils;
 @Slf4j
 public abstract class IEncryptionService {
 
-  public void encryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    Path path = Paths.get(inputFilePath);
-    if (Files.notExists(path)) {
-      log.error("No file exists at " + inputFilePath + ". Nothing to encrypt");
-      return;
+  public File encryptFile(String inputFileString, String key) throws GeneralSecurityException, IOException {
+    Path inputFilePath = Paths.get(inputFileString);
+    if (Files.notExists(inputFilePath)) {
+      log.error("No file exists at " + inputFileString + ". Nothing to encrypt");
+      return null;
     }
 
-    if (!Files.isReadable(path)) {
-      log.error("File at " + inputFilePath + " is not readable");
-      return;
+    if (!Files.isReadable(inputFilePath)) {
+      log.error("File at " + inputFileString + " is not readable");
+      return null;
     }
 
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-encrypted." + FilenameUtils.getExtension(inputFilePath);
-    File outputFile = new File(outputFilePath);
+    String outputFileString = File.separator + FilenameUtils.getPath(inputFileString) + FilenameUtils.getBaseName(inputFileString) + "-encrypted." + FilenameUtils.getExtension(inputFileString);
+    File outputFile = new File(String.valueOf(Paths.get(outputFileString)));
     outputFile.createNewFile();
 
-    performEncryption(path, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    performEncryption(inputFilePath, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    return outputFile;
   }
 
-  public void decryptFile(String inputFilePath, String key) throws GeneralSecurityException, IOException {
-    Path path = Paths.get(inputFilePath);
+  public File decryptFile(String inputFileString, String key) throws GeneralSecurityException, IOException {
+    Path inputFilePath = Paths.get(inputFileString);
 
-    if (Files.notExists(Paths.get(inputFilePath))) {
+    if (Files.notExists(inputFilePath)) {
       log.error("No file exists at " + inputFilePath + ". Nothing to decrypt");
-      return;
+      return null;
     }
 
-    if (!Files.isReadable(path)) {
+    if (!Files.isReadable(inputFilePath)) {
       log.error("File at " + inputFilePath + " is not readable");
-      return;
+      return null;
     }
 
-    String outputFilePath = File.separator + FilenameUtils.getPath(inputFilePath) + FilenameUtils.getBaseName(inputFilePath) + "-decrypted." + FilenameUtils.getExtension(inputFilePath);
-    File outputFile = new File(outputFilePath);
+    String outputFileString = File.separator + FilenameUtils.getPath(inputFileString) + FilenameUtils.getBaseName(inputFileString) + "-decrypted." + FilenameUtils.getExtension(inputFileString);
+    File outputFile = new File(String.valueOf(Paths.get(outputFileString)));
     outputFile.createNewFile();
 
-    performDecryption(path, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    performDecryption(inputFilePath, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    return outputFile;
   }
 
   protected abstract void performEncryption(Path inputFilePath, File outputFile, byte[] keyBytes)
