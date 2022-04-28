@@ -32,9 +32,10 @@
     <div class="block">
       <div id="file-type" style="padding:10px">
         <p>File Type: <select name="File Type" id="fileType">
-          <option value="text" selected="selected">Text</option>
-          <option value="img">Image</option>
-          <option value="video">Video</option>
+          <option value="TEXT" selected="selected">Text</option>
+          <option value="IMAGE">Image</option>
+          <option value="VIDEO">Video</option>
+          <option value="AUDIO">Audio</option>
         </select></p>
     </div>
       <div id="password" style="padding:5px">
@@ -43,7 +44,7 @@
       <div id="file-upload-div">
       <form id="file-upload-form" class="uploader">
   
-        <input id="file-upload" type="file" name="fileUpload" accept=".doc,.txt,.pdf" />
+        <input multiple id="file-upload" type="file" name="fileUpload" accept=".doc,.txt,.pdf" />
         <label for="file-upload" id="file-drag">
           <img id="file-image" src="#" alt="Preview" class="hidden">
           <div id="start">

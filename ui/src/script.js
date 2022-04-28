@@ -9,16 +9,16 @@ function fileType(){
     fileTypeStr = e.target.value;
     acceptType = "";
     switch(fileTypeStr){
-      case "text":
+      case "TEXT":
         acceptType = ".doc,.pdf,.txt";
         break;
-      case "img":
+      case "IMAGE":
         acceptType = "image/*";
         break;
-      case "video":
+      case "VIDEO":
         acceptType = "video/*";
         break;
-      case "audio":
+      case "AUDIO":
         acceptType = "audio/*";
         break;
     }
@@ -153,18 +153,16 @@ function ekUpload(){
         }
         var req = {
           fileType: fileTypeSelected,
-          key: pwd
+          key: pwd,
+          encryptionLevel: 'STRONG'
         }
         var formData = new FormData();
-        formData.append("body", JSON.stringify(req))
         formData.append("file", file)
+        formData.append("encryptionRequest", new Blob([JSON.stringify(req)], {type: "application/json"}))
         // Start upload
         xhr.open('POST', reqUrl, true);
-        //xhr.setRequestHeader('X-File-Name', file.name);
-        //xhr.setRequestHeader('X-File-Size', file.size);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.responseType = 'blob';
-        //xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+        //xhr.setRequestHeader()
+        xhr.responseType = 'text';
         xhr.send(formData);
       } else {
         output('Please upload a smaller file (< ' + fileSizeLimit + ' MB).');
