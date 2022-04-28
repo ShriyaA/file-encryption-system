@@ -46,7 +46,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_TXT() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_TXT() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -87,7 +87,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_PDF() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_PDF() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -128,7 +128,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_JPG() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_JPG() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
@@ -169,7 +169,7 @@ public class TextImageEncryptionServiceTest {
   }
 
   @Test
-  public void testDecryptionEncryptionText_PNG() throws GeneralSecurityException, IOException {
+  public void testDecryptionEncryptionText_PNG() {
     String key = "testing-key";
 
     ClassLoader classLoader = getClass().getClassLoader();
