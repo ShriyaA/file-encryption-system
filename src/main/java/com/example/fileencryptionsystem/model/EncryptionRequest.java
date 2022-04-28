@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class EncryptionRequest {
 
-  String inputFilePath;
   String key;
   FileType fileType;
   EncryptionLevel encryptionLevel;
