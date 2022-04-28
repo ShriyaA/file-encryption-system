@@ -55,19 +55,12 @@ public class StreamingEncryptionServiceTest {
 
     String inputFile = url.getPath();
 
-	Exception exception = assertThrows(IOException.class, () ->
-			strongerStreamingEncryptionService.decryptFile(inputFile, key));
-	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
+    Exception exception = assertThrows(IOException.class, () ->
+        strongerStreamingEncryptionService.decryptFile(inputFile, key));
+    assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists((Paths.get(decryptedFile))));
   }
 
   @Test
@@ -109,14 +102,7 @@ public class StreamingEncryptionServiceTest {
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists(Paths.get(decryptedFile)));
   }
 
   @Test
@@ -158,14 +144,7 @@ public class StreamingEncryptionServiceTest {
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists(Paths.get(decryptedFile)));
   }
 
   @Test
@@ -207,14 +186,7 @@ public class StreamingEncryptionServiceTest {
 	assertEquals("No matching key found for the ciphertext in the stream.", exception.getMessage());
 
     String decryptedFile = File.separator + FilenameUtils.getPath(inputFile) + FilenameUtils.getBaseName(inputFile) + "-decrypted." + FilenameUtils.getExtension(inputFile);
-    assert(Files.exists(Paths.get(decryptedFile)));
-
-	strongerStreamingEncryptionService.encryptFile(decryptedFile, key);
-
-    String encryptedFile = File.separator + FilenameUtils.getPath(decryptedFile) + FilenameUtils.getBaseName(decryptedFile) + "-encrypted." + FilenameUtils.getExtension(decryptedFile);
-    assert(Files.exists(Paths.get(encryptedFile)));
-
-    assert(FileTestUtils.filesCompareByByte(Paths.get(inputFile), Paths.get(encryptedFile)) != -1L);
+    assert(Files.notExists(Paths.get(decryptedFile)));
   }
 
   @Test

@@ -29,7 +29,12 @@ public abstract class IEncryptionService {
     File outputFile = new File(String.valueOf(Paths.get(outputFileString)));
     outputFile.createNewFile();
 
-    performEncryption(inputFilePath, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    try {
+      performEncryption(inputFilePath, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    } catch(IOException | GeneralSecurityException e) {
+      outputFile.delete();
+      throw e;
+    }
     return outputFile;
   }
 
@@ -50,7 +55,13 @@ public abstract class IEncryptionService {
     File outputFile = new File(String.valueOf(Paths.get(outputFileString)));
     outputFile.createNewFile();
 
-    performDecryption(inputFilePath, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    try {
+      performDecryption(inputFilePath, outputFile, key.getBytes(StandardCharsets.UTF_8));
+    } catch(IOException | GeneralSecurityException e) {
+      outputFile.delete();
+      throw e;
+    }
+
     return outputFile;
   }
 
