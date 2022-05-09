@@ -1,7 +1,9 @@
 package com.example.fileencryptionsystem.service;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +16,7 @@ import org.apache.commons.io.FilenameUtils;
 public abstract class IEncryptionService {
 
   public File encryptFile(String inputFileString, String key) throws GeneralSecurityException, IOException {
-    Path inputFilePath = Paths.get(inputFileString);
+    Path inputFilePath = new File(inputFileString).toPath();
     if (Files.notExists(inputFilePath)) {
       log.error("No file exists at " + inputFileString + ". Nothing to encrypt");
       return null;
@@ -26,7 +28,8 @@ public abstract class IEncryptionService {
     }
 
     String outputFileString = File.separator + FilenameUtils.getPath(inputFileString) + FilenameUtils.getBaseName(inputFileString) + "-encrypted." + FilenameUtils.getExtension(inputFileString);
-    File outputFile = new File(String.valueOf(Paths.get(outputFileString)));
+    File outputFile = new File(outputFileString);
+    outputFile.delete();
     outputFile.createNewFile();
 
     try {
@@ -39,7 +42,7 @@ public abstract class IEncryptionService {
   }
 
   public File decryptFile(String inputFileString, String key) throws GeneralSecurityException, IOException {
-    Path inputFilePath = Paths.get(inputFileString);
+    Path inputFilePath = new File(inputFileString).toPath();
 
     if (Files.notExists(inputFilePath)) {
       log.error("No file exists at " + inputFilePath + ". Nothing to decrypt");
@@ -52,7 +55,8 @@ public abstract class IEncryptionService {
     }
 
     String outputFileString = File.separator + FilenameUtils.getPath(inputFileString) + FilenameUtils.getBaseName(inputFileString) + "-decrypted." + FilenameUtils.getExtension(inputFileString);
-    File outputFile = new File(String.valueOf(Paths.get(outputFileString)));
+    File outputFile = new File(outputFileString);
+    outputFile.delete();
     outputFile.createNewFile();
 
     try {
