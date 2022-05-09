@@ -7,13 +7,12 @@ import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.JsonKeysetWriter;
 import com.google.crypto.tink.KeyTemplates;
 import com.google.crypto.tink.KeysetHandle;
-import com.google.crypto.tink.aead.AeadConfig;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
-import org.springframework.stereotype.Component;
 
 public abstract class StrongerTextImageEncryptionService extends TextImageEncryptionService {
 
@@ -25,14 +24,16 @@ public abstract class StrongerTextImageEncryptionService extends TextImageEncryp
   }
 
   public StrongerTextImageEncryptionService() throws GeneralSecurityException, IOException {
-    String keySetPath = getKeySetPath();
+    String keySetFile = getKeySetFileName();
+    Path keySetPath = new File(keySetFile).toPath();
     KeysetHandle handle;
-    if(Files.exists(Paths.get(keySetPath))) {
-      File keyFile = new File(keySetPath);
+
+    if(Files.exists(keySetPath)) {
+      File keyFile = keySetPath.toFile();
       handle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(keyFile));
     } else {
       handle = KeysetHandle.generateNew(KeyTemplates.get("AES256_GCM"));
-      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(new File(keySetPath)));
+      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(keySetPath.toFile()));
     }
 
     aead = handle.getPrimitive(Aead.class);

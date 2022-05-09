@@ -11,7 +11,7 @@ public class TextStrongerEncryptionService extends StrongerTextImageEncryptionSe
     super();
   }
 
-  protected String getKeySetPath() {
+  protected String getKeySetFileName() {
     return "TEXT_AES256_GCM_keyset.json";
   }
 

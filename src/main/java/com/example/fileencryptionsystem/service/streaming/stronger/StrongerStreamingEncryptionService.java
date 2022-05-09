@@ -10,7 +10,7 @@ import com.google.crypto.tink.StreamingAead;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 
 public abstract class StrongerStreamingEncryptionService extends StreamingEncryptionService {
@@ -23,14 +23,16 @@ public abstract class StrongerStreamingEncryptionService extends StreamingEncryp
   }
 
   public StrongerStreamingEncryptionService() throws GeneralSecurityException, IOException {
-    String keySetPath = getKeySetPath();
+    String keySetFile = getKeySetFileName();
+    Path keySetPath = new File(keySetFile).toPath();
     KeysetHandle handle;
-    if(Files.exists(Paths.get(keySetPath))) {
-      File keyFile = new File(keySetPath);
+
+    if(Files.exists(keySetPath)) {
+      File keyFile = keySetPath.toFile();
       handle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(keyFile));
     } else {
       handle = KeysetHandle.generateNew(KeyTemplates.get("AES256_CTR_HMAC_SHA256_1MB"));
-      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(new File(keySetPath)));
+      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(keySetPath.toFile()));
     }
 
     streamingAead = handle.getPrimitive(StreamingAead.class);

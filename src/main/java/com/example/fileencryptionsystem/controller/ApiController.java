@@ -41,7 +41,7 @@ public class ApiController {
   ResponseEntity<Resource> encrypt(@RequestPart MultipartFile file, @RequestPart EncryptionRequest encryptionRequest) {
     try {
       File outputFile = encryptionService.encryptFile(file, encryptionRequest);
-      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(Paths.get(outputFile.getAbsolutePath())));
+      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(new File(outputFile.getAbsolutePath()).toPath()));
       return ResponseEntity.ok()
           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + outputFile.getName())
           .contentLength(outputFile.length())
@@ -58,7 +58,7 @@ public class ApiController {
   ResponseEntity<Resource> decrypt(@RequestPart MultipartFile file, @RequestPart DecryptionRequest decryptionRequest) {
     try {
       File outputFile = encryptionService.decryptFile(file, decryptionRequest);
-      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(Paths.get(outputFile.getAbsolutePath())));
+      ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(new File(outputFile.getAbsolutePath()).toPath()));
       return ResponseEntity.ok()
           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + outputFile.getName())
           .contentLength(outputFile.length())
