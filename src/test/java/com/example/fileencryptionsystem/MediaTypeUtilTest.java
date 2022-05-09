@@ -6,10 +6,19 @@ import org.springframework.http.MediaType;
 
 import java.io.File;
 import java.net.URL;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MediaTypeUtilTest {
 
+    @Test
+    public void testInitialization() {
+        MediaTypeUtil mediaTypeUtil = new MediaTypeUtil();
+        assert(mediaTypeUtil.getClass() == MediaTypeUtil.class);
+    }
     @Test
     public void testMediaTypeJPEG() {
         ClassLoader classLoader = getClass().getClassLoader();
@@ -62,7 +71,7 @@ public class MediaTypeUtilTest {
         assert(url != null);
         String inputFile = url.getPath();
 
-        assertEquals(new MediaType("audio", "wav"), MediaTypeUtil.getMediaTypeForFileName(new File(inputFile).toPath()));
+        assertThat(MediaTypeUtil.getMediaTypeForFileName(new File(inputFile).toPath()), anyOf(is(new MediaType("audio", "wav")), is(new MediaType("audio", "x-wav"))));
     }
 
     @Test
@@ -94,7 +103,17 @@ public class MediaTypeUtilTest {
 
         assert(url != null);
         String inputFile = url.getPath();
-        assertEquals(new MediaType("video", "avi"), MediaTypeUtil.getMediaTypeForFileName(new File(inputFile).toPath()));
+        assertThat(MediaTypeUtil.getMediaTypeForFileName(new File(inputFile).toPath()), anyOf(is(new MediaType("video", "avi")), is(new MediaType("video", "x-msvideo"))));
+    }
+
+    @Test
+    public void testUnknownExtension() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL url = classLoader.getResource("unknownextension.pjyp");
+
+        assert(url != null);
+        String inputFile = url.getPath();
+        assertEquals(MediaType.APPLICATION_OCTET_STREAM, MediaTypeUtil.getMediaTypeForFileName(new File(inputFile).toPath()));
     }
 
 }
