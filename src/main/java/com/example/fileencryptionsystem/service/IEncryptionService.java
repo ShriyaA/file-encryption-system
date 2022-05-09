@@ -7,7 +7,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -69,7 +68,7 @@ public abstract class IEncryptionService {
     return outputFile;
   }
 
-  protected abstract String getKeySetPath();
+  protected abstract String getKeySetFileName();
 
   protected abstract void performEncryption(Path inputFilePath, File outputFile, byte[] keyBytes)
       throws IOException, GeneralSecurityException;

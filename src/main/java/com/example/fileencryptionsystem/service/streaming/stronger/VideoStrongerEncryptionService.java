@@ -11,7 +11,7 @@ public class VideoStrongerEncryptionService extends StrongerStreamingEncryptionS
     super();
   }
 
-  protected String getKeySetPath() {
+  protected String getKeySetFileName() {
     return "VIDEO_AES256_CTR_HMAC_SHA256_1MB_keyset.json";
   }
 

@@ -1,10 +1,10 @@
 package com.example.fileencryptionsystem.filestorage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import org.springframework.core.io.Resource;
@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
-  private final Path root = Paths.get("/tmp");
+  private final Path root = new File(System.getProperty("java.io.tmpdir")).toPath();
 
   @Override
   public void save(MultipartFile file) {

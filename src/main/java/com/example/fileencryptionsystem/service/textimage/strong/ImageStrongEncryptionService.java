@@ -11,7 +11,7 @@ public class ImageStrongEncryptionService extends StrongTextImageEncryptionServi
     super();
   }
 
-  protected String getKeySetPath() {
+  protected String getKeySetFileName() {
     return "IMAGE_AES128_GCM_keyset.json";
   }
 
