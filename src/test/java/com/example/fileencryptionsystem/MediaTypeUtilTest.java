@@ -71,7 +71,10 @@ public class MediaTypeUtilTest {
         assert(url != null);
         String inputFile = url.getPath();
 
-        assertThat(MediaTypeUtil.getMediaTypeForFileName(new File(inputFile).toPath()), anyOf(is(new MediaType("audio", "wav")), is(new MediaType("audio", "x-wav"))));
+        assertThat(MediaTypeUtil.getMediaTypeForFileName(new File(inputFile).toPath()), anyOf(
+                is(new MediaType("audio", "wav")),
+                is(new MediaType("audio", "x-wav")),
+                is(new MediaType("audio", "vnd.wave"))));
     }
 
     @Test
