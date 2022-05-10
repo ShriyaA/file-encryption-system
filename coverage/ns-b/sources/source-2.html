@@ -1,0 +1,146 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > StrongerTextImageEncryptionService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.fileencryptionsystem.service.textimage.stronger</a>
+</div>
+
+<h1>Coverage Summary for Class: StrongerTextImageEncryptionService (com.example.fileencryptionsystem.service.textimage.stronger)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StrongerTextImageEncryptionService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.8%
+  </span>
+  <span class="absValue">
+    (9/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.example.fileencryptionsystem.service.textimage.stronger;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.example.fileencryptionsystem.service.textimage.TextImageEncryptionService;
+<i class="no-highlight">4</i>&nbsp;import com.google.crypto.tink.Aead;
+<i class="no-highlight">5</i>&nbsp;import com.google.crypto.tink.CleartextKeysetHandle;
+<i class="no-highlight">6</i>&nbsp;import com.google.crypto.tink.JsonKeysetReader;
+<i class="no-highlight">7</i>&nbsp;import com.google.crypto.tink.JsonKeysetWriter;
+<i class="no-highlight">8</i>&nbsp;import com.google.crypto.tink.KeyTemplates;
+<i class="no-highlight">9</i>&nbsp;import com.google.crypto.tink.KeysetHandle;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;import java.io.File;
+<i class="no-highlight">12</i>&nbsp;import java.io.IOException;
+<i class="no-highlight">13</i>&nbsp;import java.nio.file.Files;
+<i class="no-highlight">14</i>&nbsp;import java.nio.file.Path;
+<i class="no-highlight">15</i>&nbsp;import java.security.GeneralSecurityException;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;public abstract class StrongerTextImageEncryptionService extends TextImageEncryptionService {
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  private final Aead aead;
+<i class="no-highlight">20</i>&nbsp;
+<i class="no-highlight">21</i>&nbsp;  @Override
+<i class="no-highlight">22</i>&nbsp;  public Aead getAead() {
+<b class="fc"><i class="no-highlight">23</i>&nbsp;    return aead;</b>
+<i class="no-highlight">24</i>&nbsp;  }
+<i class="no-highlight">25</i>&nbsp;
+<b class="fc"><i class="no-highlight">26</i>&nbsp;  public StrongerTextImageEncryptionService() throws GeneralSecurityException, IOException {</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    String keySetFile = getKeySetFileName();</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    Path keySetPath = new File(keySetFile).toPath();</b>
+<i class="no-highlight">29</i>&nbsp;    KeysetHandle handle;
+<i class="no-highlight">30</i>&nbsp;
+<b class="fc"><i class="no-highlight">31</i>&nbsp;    if(Files.exists(keySetPath)) {</b>
+<b class="fc"><i class="no-highlight">32</i>&nbsp;      File keyFile = keySetPath.toFile();</b>
+<b class="fc"><i class="no-highlight">33</i>&nbsp;      handle = CleartextKeysetHandle.read(JsonKeysetReader.withFile(keyFile));</b>
+<b class="fc"><i class="no-highlight">34</i>&nbsp;    } else {</b>
+<b class="nc"><i class="no-highlight">35</i>&nbsp;      handle = KeysetHandle.generateNew(KeyTemplates.get(&quot;AES256_GCM&quot;));</b>
+<b class="nc"><i class="no-highlight">36</i>&nbsp;      CleartextKeysetHandle.write(handle, JsonKeysetWriter.withFile(keySetPath.toFile()));</b>
+<i class="no-highlight">37</i>&nbsp;    }
+<i class="no-highlight">38</i>&nbsp;
+<b class="fc"><i class="no-highlight">39</i>&nbsp;    aead = handle.getPrimitive(Aead.class);</b>
+<i class="no-highlight">40</i>&nbsp;  }
+<i class="no-highlight">41</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-05-09 20:22</div>
+</div>
+</body>
+</html>
