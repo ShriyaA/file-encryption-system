@@ -8,6 +8,11 @@ To compile:
 ./mvnw clean install
 ```
 
+To test: 
+```console
+./mvnw test
+```
+
 To run: 
 ```console
 ./mvnw spring-boot:run
