@@ -130,22 +130,8 @@ function ekUpload(){
         // File received / failed
         xhr.onreadystatechange = function(e) {
           if (xhr.readyState == 4) {
-            var headers = xhr.getAllResponseHeaders();
-            
-            // Convert the header string into an array
-            // of individual headers
-            var arr = headers.trim().split(/[\r\n]+/);
-            
-            // Create a map of header names to values
-            var headerMap = {};
-            arr.forEach(function (line) {
-              var parts = line.split(': ');
-              var header = parts.shift();
-              var value = parts.join(': ');
-              headerMap[header] = value;
-            });
             if (xhr.status == 200){
-              downloadFile(xhr.response, headerMap)
+              downloadFile(xhr.response)
             }
             else if (xhr.status == 400){
               alert("Encryption Strength or Password incorrect");
@@ -191,15 +177,21 @@ function ekUpload(){
       }
     }
     
-    function downloadFile(response, headerMap) {
-      //$("#myModal").modal({ show: false})
+    function downloadFile(response) {
       var blobUrl = URL.createObjectURL(response);
-      var link = document.createElement("a"); // Or maybe get it from the current document
+
+      var link = document.getElementById("download-link")
+      if (link !== null){
+        link.remove()
+      }
+      
+      link = document.createElement("a"); 
+      link.setAttribute("id", "download-link");
       link.href = blobUrl;
       link.download = "encrypted_file";
       link.innerHTML = "Click here to download the file";
       link.style.display = 'none';
-      document.body.appendChild(link); // Or append it whereever you want
+      document.body.appendChild(link); 
       document.querySelector('a').click()
       resetPage();
     }
