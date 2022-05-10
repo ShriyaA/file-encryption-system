@@ -1,3 +1,4 @@
+Collaborators: Pranav Kapoor, Ingrid Chu, Yaowen Xu, Vani Korepu, Shriya Atmakuri
 
 The code will work for text file and images. Need changes to support video
 
