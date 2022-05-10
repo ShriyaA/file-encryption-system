@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > StreamingEncryptionService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.fileencryptionsystem.service.streaming</a>
+</div>
+
+<h1>Coverage Summary for Class: StreamingEncryptionService (com.example.fileencryptionsystem.service.streaming)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StreamingEncryptionService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90.5%
+  </span>
+  <span class="absValue">
+    (19/21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.example.fileencryptionsystem.service.streaming;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.example.fileencryptionsystem.service.IEncryptionService;
+<i class="no-highlight">4</i>&nbsp;import com.google.crypto.tink.StreamingAead;
+<i class="no-highlight">5</i>&nbsp;import com.google.crypto.tink.streamingaead.StreamingAeadConfig;
+<i class="no-highlight">6</i>&nbsp;import java.io.File;
+<i class="no-highlight">7</i>&nbsp;import java.io.FileInputStream;
+<i class="no-highlight">8</i>&nbsp;import java.io.FileOutputStream;
+<i class="no-highlight">9</i>&nbsp;import java.io.IOException;
+<i class="no-highlight">10</i>&nbsp;import java.io.InputStream;
+<i class="no-highlight">11</i>&nbsp;import java.io.OutputStream;
+<i class="no-highlight">12</i>&nbsp;import java.nio.file.Path;
+<i class="no-highlight">13</i>&nbsp;import java.security.GeneralSecurityException;
+<i class="no-highlight">14</i>&nbsp;import lombok.extern.slf4j.Slf4j;
+<i class="no-highlight">15</i>&nbsp;
+<b class="fc"><i class="no-highlight">16</i>&nbsp;@Slf4j</b>
+<b class="fc"><i class="no-highlight">17</i>&nbsp;public abstract class StreamingEncryptionService extends IEncryptionService {</b>
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;  static {
+<i class="no-highlight">20</i>&nbsp;    try {
+<b class="fc"><i class="no-highlight">21</i>&nbsp;      StreamingAeadConfig.register();</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;    } catch (GeneralSecurityException e) {</b>
+<b class="nc"><i class="no-highlight">23</i>&nbsp;      e.printStackTrace();</b>
+<b class="fc"><i class="no-highlight">24</i>&nbsp;    }</b>
+<i class="no-highlight">25</i>&nbsp;  }
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;  @Override
+<i class="no-highlight">28</i>&nbsp;  protected void performEncryption(Path inputFilePath, File outputFile, byte[] keyBytes)
+<i class="no-highlight">29</i>&nbsp;      throws IOException, GeneralSecurityException {
+<b class="fc"><i class="no-highlight">30</i>&nbsp;    try (OutputStream ciphertextStream =</b>
+<b class="fc"><i class="no-highlight">31</i>&nbsp;        getStreamingAead().newEncryptingStream(new FileOutputStream(outputFile), keyBytes);</b>
+<b class="fc"><i class="no-highlight">32</i>&nbsp;        InputStream plaintextStream = new FileInputStream(inputFilePath.toString())) {</b>
+<b class="fc"><i class="no-highlight">33</i>&nbsp;      byte[] chunk = new byte[1024];</b>
+<i class="no-highlight">34</i>&nbsp;      int chunkLen;
+<b class="fc"><i class="no-highlight">35</i>&nbsp;      while ((chunkLen = plaintextStream.read(chunk)) != -1) {</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;        ciphertextStream.write(chunk, 0, chunkLen);</b>
+<i class="no-highlight">37</i>&nbsp;      }
+<b class="fc"><i class="no-highlight">38</i>&nbsp;    }</b>
+<i class="no-highlight">39</i>&nbsp;  }
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  @Override
+<i class="no-highlight">42</i>&nbsp;  protected void performDecryption(Path inputFilePath, File outputFile, byte[] keyBytes)
+<i class="no-highlight">43</i>&nbsp;      throws IOException, GeneralSecurityException {
+<b class="fc"><i class="no-highlight">44</i>&nbsp;    InputStream ciphertextStream =</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;        getStreamingAead().newDecryptingStream(new FileInputStream(inputFilePath.toString()),  keyBytes);</b>
+<i class="no-highlight">46</i>&nbsp;
+<b class="fc"><i class="no-highlight">47</i>&nbsp;    OutputStream plaintextStream = new FileOutputStream(outputFile);</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;    byte[] chunk = new byte[1024];</b>
+<i class="no-highlight">49</i>&nbsp;    int chunkLen;
+<b class="fc"><i class="no-highlight">50</i>&nbsp;    while ((chunkLen = ciphertextStream.read(chunk)) != -1) {</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;      plaintextStream.write(chunk, 0, chunkLen);</b>
+<i class="no-highlight">52</i>&nbsp;    }
+<i class="no-highlight">53</i>&nbsp;
+<b class="fc"><i class="no-highlight">54</i>&nbsp;    ciphertextStream.close();</b>
+<b class="fc"><i class="no-highlight">55</i>&nbsp;    plaintextStream.close();</b>
+<i class="no-highlight">56</i>&nbsp;  }
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;  protected abstract StreamingAead getStreamingAead();
+<i class="no-highlight">59</i>&nbsp;
+<i class="no-highlight">60</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-05-09 20:22</div>
+</div>
+</body>
+</html>

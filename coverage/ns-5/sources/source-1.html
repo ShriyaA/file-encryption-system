@@ -1,0 +1,286 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > EncryptionService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.fileencryptionsystem.service</a>
+</div>
+
+<h1>Coverage Summary for Class: EncryptionService (com.example.fileencryptionsystem.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EncryptionService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (2/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.6%
+  </span>
+  <span class="absValue">
+    (11/81)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.example.fileencryptionsystem.service;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.example.fileencryptionsystem.filestorage.FilesStorageServiceImpl;
+<i class="no-highlight">4</i>&nbsp;import com.example.fileencryptionsystem.model.DecryptionRequest;
+<i class="no-highlight">5</i>&nbsp;import com.example.fileencryptionsystem.model.EncryptionLevel;
+<i class="no-highlight">6</i>&nbsp;import com.example.fileencryptionsystem.model.EncryptionRequest;
+<i class="no-highlight">7</i>&nbsp;import com.example.fileencryptionsystem.model.FileType;
+<i class="no-highlight">8</i>&nbsp;import com.example.fileencryptionsystem.service.streaming.strong.AudioStrongEncryptionService;
+<i class="no-highlight">9</i>&nbsp;import com.example.fileencryptionsystem.service.streaming.strong.VideoStrongEncryptionService;
+<i class="no-highlight">10</i>&nbsp;import com.example.fileencryptionsystem.service.streaming.stronger.AudioStrongerEncryptionService;
+<i class="no-highlight">11</i>&nbsp;import com.example.fileencryptionsystem.service.streaming.stronger.VideoStrongerEncryptionService;
+<i class="no-highlight">12</i>&nbsp;import com.example.fileencryptionsystem.service.textimage.strong.ImageStrongEncryptionService;
+<i class="no-highlight">13</i>&nbsp;import com.example.fileencryptionsystem.service.textimage.strong.TextStrongEncryptionService;
+<i class="no-highlight">14</i>&nbsp;import com.example.fileencryptionsystem.service.textimage.stronger.ImageStrongerEncryptionService;
+<i class="no-highlight">15</i>&nbsp;import com.example.fileencryptionsystem.service.textimage.stronger.TextStrongerEncryptionService;
+<i class="no-highlight">16</i>&nbsp;import java.io.File;
+<i class="no-highlight">17</i>&nbsp;import java.io.IOException;
+<i class="no-highlight">18</i>&nbsp;import java.security.GeneralSecurityException;
+<i class="no-highlight">19</i>&nbsp;import lombok.extern.slf4j.Slf4j;
+<i class="no-highlight">20</i>&nbsp;import org.springframework.core.io.Resource;
+<i class="no-highlight">21</i>&nbsp;import org.springframework.stereotype.Service;
+<i class="no-highlight">22</i>&nbsp;import org.springframework.web.multipart.MultipartFile;
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;@Service
+<b class="fc"><i class="no-highlight">26</i>&nbsp;@Slf4j</b>
+<i class="no-highlight">27</i>&nbsp;public class EncryptionService {
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;  private final TextStrongEncryptionService textStrongEncryptionService;
+<i class="no-highlight">30</i>&nbsp;  private final TextStrongerEncryptionService textStrongerEncryptionService;
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;  private final ImageStrongEncryptionService imageStrongEncryptionService;
+<i class="no-highlight">33</i>&nbsp;  private final ImageStrongerEncryptionService imageStrongerEncryptionService;
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;  private final AudioStrongEncryptionService audioStrongEncryptionService;
+<i class="no-highlight">36</i>&nbsp;  private final AudioStrongerEncryptionService audioStrongerEncryptionService;
+<i class="no-highlight">37</i>&nbsp;
+<i class="no-highlight">38</i>&nbsp;  private final VideoStrongEncryptionService videoStrongEncryptionService;
+<i class="no-highlight">39</i>&nbsp;  private final VideoStrongerEncryptionService videoStrongerEncryptionService;
+<i class="no-highlight">40</i>&nbsp;
+<i class="no-highlight">41</i>&nbsp;  private final FilesStorageServiceImpl filesStorageService;
+<i class="no-highlight">42</i>&nbsp;
+<i class="no-highlight">43</i>&nbsp;  public EncryptionService(TextStrongEncryptionService textStrongEncryptionService,
+<i class="no-highlight">44</i>&nbsp;      TextStrongerEncryptionService textStrongerEncryptionService,
+<i class="no-highlight">45</i>&nbsp;      ImageStrongEncryptionService imageStrongEncryptionService,
+<i class="no-highlight">46</i>&nbsp;      ImageStrongerEncryptionService imageStrongerEncryptionService,
+<i class="no-highlight">47</i>&nbsp;      AudioStrongEncryptionService audioStrongEncryptionService,
+<i class="no-highlight">48</i>&nbsp;      AudioStrongerEncryptionService audioStrongerEncryptionService,
+<i class="no-highlight">49</i>&nbsp;      VideoStrongEncryptionService videoStrongEncryptionService,
+<i class="no-highlight">50</i>&nbsp;      VideoStrongerEncryptionService videoStrongerEncryptionService,
+<b class="fc"><i class="no-highlight">51</i>&nbsp;      FilesStorageServiceImpl filesStorageService) {</b>
+<i class="no-highlight">52</i>&nbsp;
+<b class="fc"><i class="no-highlight">53</i>&nbsp;    this.textStrongEncryptionService = textStrongEncryptionService;</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;    this.textStrongerEncryptionService = textStrongerEncryptionService;</b>
+<i class="no-highlight">55</i>&nbsp;
+<b class="fc"><i class="no-highlight">56</i>&nbsp;    this.imageStrongEncryptionService = imageStrongEncryptionService;</b>
+<b class="fc"><i class="no-highlight">57</i>&nbsp;    this.imageStrongerEncryptionService = imageStrongerEncryptionService;</b>
+<i class="no-highlight">58</i>&nbsp;
+<b class="fc"><i class="no-highlight">59</i>&nbsp;    this.audioStrongEncryptionService = audioStrongEncryptionService;</b>
+<b class="fc"><i class="no-highlight">60</i>&nbsp;    this.audioStrongerEncryptionService = audioStrongerEncryptionService;</b>
+<i class="no-highlight">61</i>&nbsp;
+<b class="fc"><i class="no-highlight">62</i>&nbsp;    this.videoStrongEncryptionService = videoStrongEncryptionService;</b>
+<b class="fc"><i class="no-highlight">63</i>&nbsp;    this.videoStrongerEncryptionService = videoStrongerEncryptionService;</b>
+<i class="no-highlight">64</i>&nbsp;
+<b class="fc"><i class="no-highlight">65</i>&nbsp;    this.filesStorageService = filesStorageService;</b>
+<i class="no-highlight">66</i>&nbsp;  }
+<i class="no-highlight">67</i>&nbsp;
+<i class="no-highlight">68</i>&nbsp;  public File encryptFile(MultipartFile file, EncryptionRequest encryptionRequest) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">69</i>&nbsp;    Resource tempFile = null;</b>
+<i class="no-highlight">70</i>&nbsp;    try {
+<b class="nc"><i class="no-highlight">71</i>&nbsp;      filesStorageService.save(file);</b>
+<b class="nc"><i class="no-highlight">72</i>&nbsp;      tempFile = filesStorageService.load(file.getOriginalFilename());</b>
+<b class="nc"><i class="no-highlight">73</i>&nbsp;      return encryptFile(tempFile.getFile().getAbsolutePath(),</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;          encryptionRequest.getKey(), encryptionRequest.getFileType(),</b>
+<b class="nc"><i class="no-highlight">75</i>&nbsp;          encryptionRequest.getEncryptionLevel());</b>
+<i class="no-highlight">76</i>&nbsp;    } finally {
+<b class="nc"><i class="no-highlight">77</i>&nbsp;      if (tempFile != null) {</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;        filesStorageService.delete(tempFile.getFile().toString());</b>
+<i class="no-highlight">79</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">80</i>&nbsp;    }</b>
+<i class="no-highlight">81</i>&nbsp;  }
+<i class="no-highlight">82</i>&nbsp;
+<i class="no-highlight">83</i>&nbsp;  private File encryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">84</i>&nbsp;    File outputFile = null;</b>
+<i class="no-highlight">85</i>&nbsp;
+<b class="nc"><i class="no-highlight">86</i>&nbsp;    if (EncryptionLevel.STRONG == encryptionLevel) {</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;      outputFile = encryptStrong(inputFilePath, key, fileType);</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;    } else if (EncryptionLevel.STRONGER == encryptionLevel) {</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;      outputFile = encryptStronger(inputFilePath, key, fileType);</b>
+<i class="no-highlight">90</i>&nbsp;    }
+<i class="no-highlight">91</i>&nbsp;
+<b class="nc"><i class="no-highlight">92</i>&nbsp;    return outputFile;</b>
+<i class="no-highlight">93</i>&nbsp;  }
+<i class="no-highlight">94</i>&nbsp;
+<i class="no-highlight">95</i>&nbsp;  private File encryptStrong(String inputFilePath, String key, FileType fileType) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">96</i>&nbsp;    File outputFile = null;</b>
+<b class="nc"><i class="no-highlight">97</i>&nbsp;    if (FileType.TEXT == fileType) {</b>
+<b class="nc"><i class="no-highlight">98</i>&nbsp;      outputFile = textStrongEncryptionService.encryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">99</i>&nbsp;    } else if (FileType.IMAGE == fileType) {</b>
+<b class="nc"><i class="no-highlight">100</i>&nbsp;      outputFile = imageStrongEncryptionService.encryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">101</i>&nbsp;    } else if (FileType.AUDIO == fileType) {</b>
+<b class="nc"><i class="no-highlight">102</i>&nbsp;      outputFile = audioStrongEncryptionService.encryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">103</i>&nbsp;    } else if (FileType.VIDEO == fileType) {</b>
+<b class="nc"><i class="no-highlight">104</i>&nbsp;      outputFile = videoStrongEncryptionService.encryptFile(inputFilePath, key);</b>
+<i class="no-highlight">105</i>&nbsp;    }
+<i class="no-highlight">106</i>&nbsp;
+<b class="nc"><i class="no-highlight">107</i>&nbsp;    return outputFile;</b>
+<i class="no-highlight">108</i>&nbsp;  }
+<i class="no-highlight">109</i>&nbsp;
+<i class="no-highlight">110</i>&nbsp;  private File encryptStronger(String inputFilePath, String key, FileType fileType) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">111</i>&nbsp;    File outputFile = null;</b>
+<b class="nc"><i class="no-highlight">112</i>&nbsp;    if (FileType.TEXT == fileType) {</b>
+<b class="nc"><i class="no-highlight">113</i>&nbsp;      outputFile = textStrongerEncryptionService.encryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">114</i>&nbsp;    } else if (FileType.IMAGE == fileType) {</b>
+<b class="nc"><i class="no-highlight">115</i>&nbsp;      outputFile = imageStrongerEncryptionService.encryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">116</i>&nbsp;    } else if (FileType.AUDIO == fileType) {</b>
+<b class="nc"><i class="no-highlight">117</i>&nbsp;      outputFile = audioStrongerEncryptionService.encryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">118</i>&nbsp;    } else if (FileType.VIDEO == fileType) {</b>
+<b class="nc"><i class="no-highlight">119</i>&nbsp;      outputFile = videoStrongerEncryptionService.encryptFile(inputFilePath, key);</b>
+<i class="no-highlight">120</i>&nbsp;    }
+<i class="no-highlight">121</i>&nbsp;
+<b class="nc"><i class="no-highlight">122</i>&nbsp;    return outputFile;</b>
+<i class="no-highlight">123</i>&nbsp;  }
+<i class="no-highlight">124</i>&nbsp;
+<i class="no-highlight">125</i>&nbsp;  public File decryptFile(MultipartFile file, DecryptionRequest decryptionRequest) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">126</i>&nbsp;    Resource tempFile = null;</b>
+<i class="no-highlight">127</i>&nbsp;    try {
+<b class="nc"><i class="no-highlight">128</i>&nbsp;      filesStorageService.save(file);</b>
+<b class="nc"><i class="no-highlight">129</i>&nbsp;      tempFile = filesStorageService.load(file.getOriginalFilename());</b>
+<b class="nc"><i class="no-highlight">130</i>&nbsp;      return decryptFile(tempFile.getFile().getAbsolutePath(),</b>
+<b class="nc"><i class="no-highlight">131</i>&nbsp;          decryptionRequest.getKey(), decryptionRequest.getFileType(),</b>
+<b class="nc"><i class="no-highlight">132</i>&nbsp;          decryptionRequest.getEncryptionLevel());</b>
+<i class="no-highlight">133</i>&nbsp;    } finally {
+<b class="nc"><i class="no-highlight">134</i>&nbsp;      if (tempFile != null) {</b>
+<b class="nc"><i class="no-highlight">135</i>&nbsp;        filesStorageService.delete(tempFile.getFile().toString());</b>
+<i class="no-highlight">136</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">137</i>&nbsp;    }</b>
+<i class="no-highlight">138</i>&nbsp;  }
+<i class="no-highlight">139</i>&nbsp;
+<i class="no-highlight">140</i>&nbsp;  private File decryptFile(String inputFilePath, String key, FileType fileType, EncryptionLevel encryptionLevel) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">141</i>&nbsp;    File outputFile = null;</b>
+<i class="no-highlight">142</i>&nbsp;
+<b class="nc"><i class="no-highlight">143</i>&nbsp;    if (EncryptionLevel.STRONG == encryptionLevel) {</b>
+<b class="nc"><i class="no-highlight">144</i>&nbsp;      outputFile = decryptStrong(inputFilePath, key, fileType);</b>
+<b class="nc"><i class="no-highlight">145</i>&nbsp;    } else if (EncryptionLevel.STRONGER == encryptionLevel) {</b>
+<b class="nc"><i class="no-highlight">146</i>&nbsp;      outputFile = decryptStronger(inputFilePath, key, fileType);</b>
+<i class="no-highlight">147</i>&nbsp;    }
+<i class="no-highlight">148</i>&nbsp;
+<b class="nc"><i class="no-highlight">149</i>&nbsp;    return outputFile;</b>
+<i class="no-highlight">150</i>&nbsp;  }
+<i class="no-highlight">151</i>&nbsp;
+<i class="no-highlight">152</i>&nbsp;  private File decryptStrong(String inputFilePath, String key, FileType fileType) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">153</i>&nbsp;    File outputFile = null;</b>
+<b class="nc"><i class="no-highlight">154</i>&nbsp;    if (FileType.TEXT == fileType) {</b>
+<b class="nc"><i class="no-highlight">155</i>&nbsp;      outputFile = textStrongEncryptionService.decryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">156</i>&nbsp;    } else if (FileType.IMAGE == fileType) {</b>
+<b class="nc"><i class="no-highlight">157</i>&nbsp;      outputFile = imageStrongEncryptionService.decryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">158</i>&nbsp;    } else if (FileType.AUDIO == fileType) {</b>
+<b class="nc"><i class="no-highlight">159</i>&nbsp;      outputFile = audioStrongEncryptionService.decryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">160</i>&nbsp;    } else if (FileType.VIDEO == fileType) {</b>
+<b class="nc"><i class="no-highlight">161</i>&nbsp;      outputFile = videoStrongEncryptionService.decryptFile(inputFilePath, key);</b>
+<i class="no-highlight">162</i>&nbsp;    }
+<i class="no-highlight">163</i>&nbsp;
+<b class="nc"><i class="no-highlight">164</i>&nbsp;    return outputFile;</b>
+<i class="no-highlight">165</i>&nbsp;  }
+<i class="no-highlight">166</i>&nbsp;
+<i class="no-highlight">167</i>&nbsp;  private File decryptStronger(String inputFilePath, String key, FileType fileType) throws GeneralSecurityException, IOException {
+<b class="nc"><i class="no-highlight">168</i>&nbsp;    File outputFile = null;</b>
+<b class="nc"><i class="no-highlight">169</i>&nbsp;    if (FileType.TEXT == fileType) {</b>
+<b class="nc"><i class="no-highlight">170</i>&nbsp;      outputFile = textStrongerEncryptionService.decryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">171</i>&nbsp;    } else if (FileType.IMAGE == fileType) {</b>
+<b class="nc"><i class="no-highlight">172</i>&nbsp;      outputFile = imageStrongerEncryptionService.decryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">173</i>&nbsp;    } else if (FileType.AUDIO == fileType) {</b>
+<b class="nc"><i class="no-highlight">174</i>&nbsp;      outputFile = audioStrongerEncryptionService.decryptFile(inputFilePath, key);</b>
+<b class="nc"><i class="no-highlight">175</i>&nbsp;    } else if (FileType.VIDEO == fileType) {</b>
+<b class="nc"><i class="no-highlight">176</i>&nbsp;      outputFile = videoStrongerEncryptionService.decryptFile(inputFilePath, key);</b>
+<i class="no-highlight">177</i>&nbsp;    }
+<i class="no-highlight">178</i>&nbsp;
+<b class="nc"><i class="no-highlight">179</i>&nbsp;    return outputFile;</b>
+<i class="no-highlight">180</i>&nbsp;  }
+<i class="no-highlight">181</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-05-09 20:22</div>
+</div>
+</body>
+</html>
